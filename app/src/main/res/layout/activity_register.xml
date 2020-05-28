@@ -55,7 +55,7 @@
                 android:drawableLeft="@drawable/password"
                 android:gravity="center_vertical"
                 android:hint="Password..."
-                android:inputType="textEmailAddress"
+                android:inputType="textPassword"
                 android:padding="4dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="17dp"

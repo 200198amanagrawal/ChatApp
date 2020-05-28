@@ -84,6 +84,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="19dp"
                 android:background="@color/colorPrimary"
+                android:drawableLeft="@drawable/phone"
                 android:text="Contact Number"
                 android:textColor="@color/cardview_light_background"
                 android:textSize="24sp" />
