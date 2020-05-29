@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -24,6 +26,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText m_regmail,m_regpass;
     private Button m_register;
     private FirebaseAuth m_auth;
+    private DatabaseReference m_dataBaseReference;
     private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
         initialize();
         startLoginActivity();
         m_auth=FirebaseAuth.getInstance();
+        m_dataBaseReference= FirebaseDatabase.getInstance().getReference();
         m_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,8 +66,9 @@ public class RegisterActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful())
                             {
-                                Intent intent=new Intent(RegisterActivity.this, LoginActivity.class);
-                                startActivity(intent);
+                                String currentUserId=m_auth.getUid();
+                                m_dataBaseReference.child("User").child(currentUserId).setValue("");
+                                startMainActivity();
                                 Toast.makeText(RegisterActivity.this, "Account Created Successfully...", Toast.LENGTH_SHORT).show();
                                 progressDialog.dismiss();
                             }
@@ -76,6 +81,13 @@ public class RegisterActivity extends AppCompatActivity {
                     }
             );
         }
+    }
+
+    private void startMainActivity() {
+        Intent intent=new Intent(RegisterActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void initialize() {

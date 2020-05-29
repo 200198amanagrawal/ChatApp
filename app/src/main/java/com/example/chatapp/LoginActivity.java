@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private FirebaseUser m_currentUser;
     private TextView m_newaccount;
     private FirebaseAuth m_auth;
     private EditText m_loginEmail,m_loginPassword;
@@ -48,7 +47,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startLoginActivity() {
         m_auth=FirebaseAuth.getInstance();
-        m_currentUser=m_auth.getCurrentUser();
         m_loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,8 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful())
                             {
-                                Intent intent=new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
+                                startMainActivity();
                                 Toast.makeText(LoginActivity.this, "Account Created Successfully...", Toast.LENGTH_SHORT).show();
                                 progressDialog.dismiss();
                             }
@@ -101,17 +98,11 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog=new ProgressDialog(this);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if(m_currentUser!=null)
-        {
-            startMainActivity();
-        }
-    }
     private void startMainActivity()
     {
         Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        finish();
         startActivity(intent);
     }
 }
