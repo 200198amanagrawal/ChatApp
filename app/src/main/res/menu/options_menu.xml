@@ -14,5 +14,9 @@
         android:id="@+id/settings"
         android:title="Settings"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/create_groups"
+        android:title="Create Groups"
+        app:showAsAction="never"/>
 
 </menu>
