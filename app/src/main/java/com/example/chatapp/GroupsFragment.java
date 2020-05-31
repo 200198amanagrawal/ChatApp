@@ -1,6 +1,7 @@
 package com.example.chatapp;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -47,6 +49,15 @@ private DatabaseReference m_GroupsRef;
         m_GroupsRef= FirebaseDatabase.getInstance().getReference().child("Groups");
         InitializeFields();
         RetrieveAndDisplayGroups();
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String currwentGroupName=parent.getItemAtPosition(position).toString();
+                Intent groupChatIntent=new Intent(getContext(),GroupChatActivity.class);
+                groupChatIntent.putExtra("groupName",currwentGroupName);
+                startActivity(groupChatIntent);
+            }
+        });
         return groupFragmentView;
     }
 

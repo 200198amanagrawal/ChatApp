@@ -24,13 +24,20 @@ public class LoginActivity extends AppCompatActivity {
     private TextView m_newaccount;
     private FirebaseAuth m_auth;
     private EditText m_loginEmail,m_loginPassword;
-    private Button m_loginButton;
+    private Button m_loginButton,m_phoneLoginButton;
     private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         initializeVariables();
+        m_phoneLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent phoneLoginIntent=new Intent(LoginActivity.this,PhoneLoginActivity.class);
+                startActivity(phoneLoginIntent);
+            }
+        });
         startRegisterActivity();
         startLoginActivity();
     }
@@ -94,6 +101,7 @@ public class LoginActivity extends AppCompatActivity {
         m_loginEmail=findViewById(R.id.login_email);
         m_loginPassword=findViewById(R.id.login_password);
         m_loginButton=findViewById(R.id.login_button);
+        m_phoneLoginButton=findViewById(R.id.phone_button);
         m_newaccount=findViewById(R.id.new_account);
         progressDialog=new ProgressDialog(this);
     }
