@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 startSettingsActivity();
                 break;
             case R.id.find_friends:
+                startFindFriendActivity();
                 break;
             case R.id.create_groups:
                 createNewGroups();
@@ -123,6 +124,12 @@ public class MainActivity extends AppCompatActivity {
                     break;
         }
         return true;
+    }
+
+    private void startFindFriendActivity() {
+        Intent intent=new Intent(MainActivity.this,FindFriendsActivity.class);
+        // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void createNewGroups() {
