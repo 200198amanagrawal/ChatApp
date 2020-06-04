@@ -6,12 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".SettingsActivity">
 
+    <include
+        layout="@layout/app_bar_layout"
+        android:id="@+id/settings_toolbar">
+
+    </include>
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="70dp"
         android:src="@drawable/profile_image"
         app:civ_border_width="2dp"
         app:civ_border_color="@color/colorPrimaryDark"/>
@@ -21,7 +27,7 @@
         android:layout_height="wrap_content"
         android:hint="Username"
         android:layout_below="@+id/profile_image"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="25dp"
         android:background="@drawable/inputs"
         android:drawableLeft="@drawable/edit_profile"
         android:textStyle="bold"

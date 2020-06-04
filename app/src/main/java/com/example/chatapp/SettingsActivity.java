@@ -3,6 +3,7 @@ package com.example.chatapp;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -46,6 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
     private int m_GalleryPick=1;
     private StorageReference m_UserProfileImageReferences;
     private ProgressDialog loadingBar;
+    private Toolbar m_Toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,20 +119,19 @@ public class SettingsActivity extends AppCompatActivity {
             Toast.makeText(this, "Username must nt be null", Toast.LENGTH_SHORT).show();
         }
         if (status.isEmpty()) {
-            Toast.makeText(this, "Staus must not empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Status must not empty", Toast.LENGTH_SHORT).show();
         } else {
-            HashMap<String, String> profileMap = new HashMap<>();
+            HashMap<String, Object> profileMap = new HashMap<>();
             profileMap.put("uid", m_currentUserId);
             profileMap.put("name", username);
             profileMap.put("status", status);
-            m_databaseReference.child("Users").child(m_currentUserId).setValue(profileMap)
+            m_databaseReference.child("Users").child(m_currentUserId).updateChildren(profileMap)
                     .addOnCompleteListener(
                             new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         startMainActivity();
-                                        Toast.makeText(SettingsActivity.this, "Account Created Successfully...", Toast.LENGTH_SHORT).show();
                                     } else {
                                         String message = task.getException().toString();
                                         Toast.makeText(SettingsActivity.this, "Error : " + message, Toast.LENGTH_SHORT).show();
@@ -145,6 +146,11 @@ public class SettingsActivity extends AppCompatActivity {
         m_updateUsername=findViewById(R.id.set_username);
         m_updateStatus=findViewById(R.id.set_status);
         loadingBar=new ProgressDialog(this);
+        m_Toolbar=findViewById(R.id.settings_toolbar);
+        setSupportActionBar(m_Toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Settings");
     }
 
     @Override
