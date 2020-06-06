@@ -19,6 +19,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -26,7 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText m_regmail,m_regpass;
     private Button m_register;
     private FirebaseAuth m_auth;
-    private DatabaseReference m_dataBaseReference;
+    private DatabaseReference m_RootRef;
     private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
         initialize();
         startLoginActivity();
         m_auth=FirebaseAuth.getInstance();
-        m_dataBaseReference= FirebaseDatabase.getInstance().getReference();
+        m_RootRef = FirebaseDatabase.getInstance().getReference();
         m_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +68,10 @@ public class RegisterActivity extends AppCompatActivity {
                             if(task.isSuccessful())
                             {
                                 String currentUserId=m_auth.getUid();
-                                m_dataBaseReference.child("Users").child(currentUserId).setValue("");
+                                String deviceToken= FirebaseInstanceId.getInstance().getToken();
+                                m_RootRef.child("Users").child(currentUserId).setValue("");
+                                m_RootRef.child("Users").child(currentUserId).child("device_token")
+                                        .setValue(deviceToken);
                                 startMainActivity();
                                 Toast.makeText(RegisterActivity.this, "Account Created Successfully...", Toast.LENGTH_SHORT).show();
                                 progressDialog.dismiss();

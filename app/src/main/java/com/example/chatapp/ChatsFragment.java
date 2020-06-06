@@ -57,7 +57,9 @@ public class ChatsFragment extends Fragment {
             Intent intent=new Intent(getContext(),LoginActivity.class);
             startActivity(intent);
         }
-        m_CurrentUserID=mAuth.getCurrentUser().getUid();
+        else {
+            m_CurrentUserID = mAuth.getCurrentUser().getUid();
+        }
         m_ChatsRef= FirebaseDatabase.getInstance().getReference().child("Contacts").child(m_CurrentUserID);
         m_UsersRef= FirebaseDatabase.getInstance().getReference().child("Users");
 
