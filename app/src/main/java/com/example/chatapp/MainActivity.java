@@ -27,22 +27,30 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.SimpleTimeZone;
+
 public class MainActivity extends AppCompatActivity {
 
     private Toolbar m_toolbar;
     private ViewPager m_ViewPager;
     private TabLayout m_TabLayout;
     private TabsAccessorAdapter m_tabsAccessorAdapter;
-    private FirebaseUser m_currentUser;
     private FirebaseAuth m_auth;
     private DatabaseReference m_dataBaseReference;
+    private String m_CurrentUserID;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         m_auth=FirebaseAuth.getInstance();
+
         m_dataBaseReference= FirebaseDatabase.getInstance().getReference();
-        m_currentUser=m_auth.getCurrentUser();
+
         m_toolbar =findViewById(R.id.main_page_toolbar);
         setSupportActionBar(m_toolbar);
         getSupportActionBar().setTitle("ChatApp");
@@ -59,12 +67,34 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        FirebaseUser m_currentUser=m_auth.getCurrentUser();
         if(m_currentUser==null)
         {
             startLoginActivity();
         }
         else {
+            updateUserOnlineStatus("online");
             verifyUserAvailability();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        FirebaseUser m_currentUser=m_auth.getCurrentUser();
+        if(m_currentUser!=null)
+        {
+            updateUserOnlineStatus("offline");
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        FirebaseUser m_currentUser=m_auth.getCurrentUser();
+        if(m_currentUser!=null)
+        {
+            updateUserOnlineStatus("offline");
         }
     }
 
@@ -108,16 +138,20 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId())
         {
             case R.id.logout:
+                updateUserOnlineStatus("offline");
                 m_auth.signOut();
                 startLoginActivity();
                 break;
             case R.id.settings:
+                updateUserOnlineStatus("online");
                 startSettingsActivity();
                 break;
             case R.id.find_friends:
+                updateUserOnlineStatus("online");
                 startFindFriendActivity();
                 break;
             case R.id.create_groups:
+                updateUserOnlineStatus("online");
                 createNewGroups();
                 break;
                 default:
@@ -176,5 +210,28 @@ public class MainActivity extends AppCompatActivity {
     private void startSettingsActivity() {
         Intent intent=new Intent(MainActivity.this,SettingsActivity.class);
         startActivity(intent);
+    }
+
+    private void updateUserOnlineStatus(String state)
+    {
+        String saveCurrentTime,saveCurrentDate;
+        Calendar calendar=Calendar.getInstance();
+
+        SimpleDateFormat currentDate=new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate=currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime=new SimpleDateFormat("hh:mm a");
+        saveCurrentTime=currentTime.format(calendar.getTime());
+
+        HashMap<String,Object> onlineStateMap=new HashMap<>();
+        onlineStateMap.put("time",saveCurrentTime);
+        onlineStateMap.put("date",saveCurrentDate);
+        onlineStateMap.put("state",state);
+
+
+        m_CurrentUserID=m_auth.getCurrentUser().getUid();
+
+        m_dataBaseReference.child("Users").child(m_CurrentUserID).child("userState")
+                .updateChildren(onlineStateMap);
     }
 }

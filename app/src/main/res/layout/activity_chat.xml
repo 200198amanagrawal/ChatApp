@@ -22,28 +22,43 @@
         >
 
     </androidx.recyclerview.widget.RecyclerView>
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/chat_linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:background="@color/cardview_light_background"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/background_light"
+        android:orientation="horizontal"
         >
+        <ImageButton
+            android:id="@+id/send_files_btn"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:src="@drawable/send_files"
+            android:layout_alignParentLeft="true"
+            android:backgroundTint="@android:color/white"
+            />
+
+
         <EditText
             android:id="@+id/input_message"
-            android:layout_width="320dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="type here...."
+            android:hint="type message here..."
             android:padding="15dp"
+            android:maxLines="5"
+            android:layout_toRightOf="@+id/send_files_btn"
+            android:layout_toLeftOf="@+id/send_msg_button"
             />
         <ImageButton
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:id="@+id/send_msg_button"
-            android:src="@drawable/send_message"/>
+            android:src="@drawable/send_message"
+            android:layout_alignParentRight="true"
+            android:backgroundTint="@android:color/white"
+            android:id="@+id/send_msg_button"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
