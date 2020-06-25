@@ -16,6 +16,9 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.chatapp.MenuActivities.FindFriends.FindFriendsActivity;
+import com.example.chatapp.MenuActivities.SettingsActivity;
+import com.example.chatapp.SignupAndLogin.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
@@ -30,7 +33,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.SimpleTimeZone;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -121,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void startLoginActivity()
     {
-        Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+        Intent intent=new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 
@@ -161,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startFindFriendActivity() {
-        Intent intent=new Intent(MainActivity.this,FindFriendsActivity.class);
+        Intent intent=new Intent(MainActivity.this, FindFriendsActivity.class);
         // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
@@ -208,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startSettingsActivity() {
-        Intent intent=new Intent(MainActivity.this,SettingsActivity.class);
+        Intent intent=new Intent(MainActivity.this, SettingsActivity.class);
         startActivity(intent);
     }
 

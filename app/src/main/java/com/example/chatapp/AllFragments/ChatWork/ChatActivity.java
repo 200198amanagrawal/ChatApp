@@ -1,4 +1,4 @@
-package com.example.chatapp;
+package com.example.chatapp.AllFragments.ChatWork;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +23,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.chatapp.AllFragments.ModelClass.Messages;
+import com.example.chatapp.R;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -286,7 +288,7 @@ public class ChatActivity extends AppCompatActivity {
         actionBar.setDisplayShowCustomEnabled(true);
 
         LayoutInflater layoutInflater=(LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View actionBarView=layoutInflater.inflate(R.layout.custom_char_bar,null);
+        View actionBarView=layoutInflater.inflate(R.layout.custom_chat_bar,null);
         actionBar.setCustomView(actionBarView);
 
         m_UserImage=findViewById(R.id.custom_profile_image);

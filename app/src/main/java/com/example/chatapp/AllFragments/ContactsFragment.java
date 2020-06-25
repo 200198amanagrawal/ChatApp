@@ -1,4 +1,4 @@
-package com.example.chatapp;
+package com.example.chatapp.AllFragments;
 
 
 import android.content.Intent;
@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.chatapp.AllFragments.ModelClass.Contacts;
+import com.example.chatapp.R;
+import com.example.chatapp.SignupAndLogin.LoginActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -57,7 +60,7 @@ public class ContactsFragment extends Fragment {
         mAuth=FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser()==null)
         {
-            Intent intent=new Intent(getContext(),LoginActivity.class);
+            Intent intent=new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
         }
         m_currentUserID=mAuth.getCurrentUser().getUid();

@@ -1,4 +1,4 @@
-package com.example.chatapp;
+package com.example.chatapp.AllFragments.GroupChats;
 
 
 import android.content.Intent;
@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import com.example.chatapp.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -53,7 +54,7 @@ private DatabaseReference m_GroupsRef;
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String currwentGroupName=parent.getItemAtPosition(position).toString();
-                Intent groupChatIntent=new Intent(getContext(),GroupChatActivity.class);
+                Intent groupChatIntent=new Intent(getContext(), GroupChatActivity.class);
                 groupChatIntent.putExtra("groupName",currwentGroupName);
                 startActivity(groupChatIntent);
             }

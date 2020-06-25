@@ -1,4 +1,4 @@
-package com.example.chatapp;
+package com.example.chatapp.AllFragments.ModelClass;
 
 public class Contacts {
     public String name,status,image;

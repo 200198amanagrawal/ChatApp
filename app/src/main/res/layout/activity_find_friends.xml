@@ -4,17 +4,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FindFriendsActivity">
+    tools:context=".MenuActivities.FindFriends.FindFriendsActivity">
     <include
         android:id="@+id/find_friends_toolbar"
         layout="@layout/app_bar_layout"
         />
 
+    <SearchView
+        android:layout_below="@+id/find_friends_toolbar"
+        android:id="@+id/searching_friends"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/find_friends_recycler_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/find_friends_toolbar"
+        android:layout_below="@+id/searching_friends"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         />

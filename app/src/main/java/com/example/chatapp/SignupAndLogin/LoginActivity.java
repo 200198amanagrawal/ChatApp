@@ -1,4 +1,4 @@
-package com.example.chatapp;
+package com.example.chatapp.SignupAndLogin;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,11 +13,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.chatapp.MainActivity;
+import com.example.chatapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -44,7 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         m_phoneLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent phoneLoginIntent=new Intent(LoginActivity.this,PhoneLoginActivity.class);
+                Intent phoneLoginIntent=new Intent(LoginActivity.this, PhoneLoginActivity.class);
                 startActivity(phoneLoginIntent);
             }
         });
@@ -130,7 +131,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startMainActivity()
     {
-        Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+        Intent intent=new Intent(LoginActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

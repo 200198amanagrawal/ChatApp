@@ -1,4 +1,4 @@
-package com.example.chatapp;
+package com.example.chatapp.AllFragments.ChatWork;
 
 
 import android.content.Intent;
@@ -14,6 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.chatapp.AllFragments.ModelClass.Contacts;
+import com.example.chatapp.R;
+import com.example.chatapp.SignupAndLogin.LoginActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,7 +57,7 @@ public class ChatsFragment extends Fragment {
         mAuth=FirebaseAuth.getInstance();
         if(mAuth.getCurrentUser()==null)
         {
-            Intent intent=new Intent(getContext(),LoginActivity.class);
+            Intent intent=new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
         }
         else {
@@ -117,7 +120,7 @@ public class ChatsFragment extends Fragment {
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
-                                            Intent intent=new Intent(getContext(),ChatActivity.class);
+                                            Intent intent=new Intent(getContext(), ChatActivity.class);
                                             intent.putExtra("visit_user_id",userIds);
                                             intent.putExtra("visit_user_name",retName);
                                             intent.putExtra("visit_user_image", retImage[0]);

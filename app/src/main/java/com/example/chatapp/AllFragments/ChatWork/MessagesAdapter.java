@@ -1,4 +1,4 @@
-package com.example.chatapp;
+package com.example.chatapp.AllFragments.ChatWork;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chatapp.AllFragments.ModelClass.Messages;
+import com.example.chatapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -227,7 +229,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
                                 }
                                 else if(which==1)
                                 {
-                                    Intent intent=new Intent(holder.itemView.getContext(),ImageViewerActivity.class);
+                                    Intent intent=new Intent(holder.itemView.getContext(), ImageViewerActivity.class);
                                     intent.putExtra("url",userMsgList.get(position).getMessage());
                                     holder.itemView.getContext().startActivity(intent);
                                 }

@@ -1,10 +1,11 @@
-package com.example.chatapp;
+package com.example.chatapp.AllFragments.ChatWork;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.widget.ImageView;
 
+import com.example.chatapp.R;
 import com.squareup.picasso.Picasso;
 
 public class ImageViewerActivity extends AppCompatActivity {
