@@ -25,7 +25,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:scaleType="centerCrop"
-                app:srcCompat="@drawable/signup_photo" />
+                app:srcCompat="@drawable/register_image" />
 
             <EditText
                 android:id="@+id/register_email"
@@ -68,10 +68,11 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/register_password"
                 android:layout_marginLeft="19dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginRight="19dp"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/gradient_button_color"
                 android:text="Create New Account"
+                android:textAllCaps="false"
                 android:textColor="@color/cardview_light_background"
                 android:textSize="24sp" />
 

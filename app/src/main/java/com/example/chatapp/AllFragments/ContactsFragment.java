@@ -39,7 +39,7 @@ public class ContactsFragment extends Fragment {
 
     private View m_ContactsView;
     private RecyclerView m_myContactList;
-    private DatabaseReference m_ContactRef,m_UsersRef;
+    private DatabaseReference m_ContactRef, m_UsersRef;
     private FirebaseAuth mAuth;
     private String m_currentUserID;
 
@@ -52,20 +52,21 @@ public class ContactsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        m_ContactsView= inflater.inflate(R.layout.fragment_contacts, container, false);
-        m_myContactList=m_ContactsView.findViewById(R.id.contacts_list);
+        m_ContactsView = inflater.inflate(R.layout.fragment_contacts, container, false);
+        m_myContactList = m_ContactsView.findViewById(R.id.contacts_list);
         m_myContactList.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        mAuth=FirebaseAuth.getInstance();
-        if(mAuth.getCurrentUser()==null)
-        {
-            Intent intent=new Intent(getContext(), LoginActivity.class);
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() == null) {
+            Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
         }
-        m_currentUserID=mAuth.getCurrentUser().getUid();
-        m_ContactRef= FirebaseDatabase.getInstance().getReference().child("Contacts").child(m_currentUserID);
-        m_UsersRef= FirebaseDatabase.getInstance().getReference().child("Users");
+        else {
+            m_currentUserID = mAuth.getCurrentUser().getUid();
+            m_ContactRef = FirebaseDatabase.getInstance().getReference().child("Contacts").child(m_currentUserID);
+        }
+        m_UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         return m_ContactsView;
     }
@@ -73,85 +74,79 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        FirebaseRecyclerOptions options=
-                new FirebaseRecyclerOptions.Builder<Contacts>()
-                .setQuery(m_ContactRef,Contacts.class)
-                .build();
-        FirebaseRecyclerAdapter<Contacts,ContactsViewHolder> adapter=
-                new FirebaseRecyclerAdapter<Contacts, ContactsViewHolder>(options) {
-            @Override
-            protected void onBindViewHolder(@NonNull final ContactsViewHolder holder, final int position, @NonNull Contacts model) {
-                String userIds=getRef(position).getKey();
-                m_UsersRef.child(userIds).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.exists())
-                        {
-                            if(dataSnapshot.child("userState").hasChild("state"))
-                            {
-                                String state=dataSnapshot.child("userState").child("state").getValue().toString();
-                                if(state.equals("online"))
-                                {
-                                   holder.onlineIcon.setVisibility(View.VISIBLE);
-                                }
-                                else if(state.equals("offline"))
-                                {
-                                    holder.onlineIcon.setVisibility(View.INVISIBLE);
-                                }
-                            }
-                            else {
+        if (m_ContactRef != null) {
+            FirebaseRecyclerOptions options =
+                    new FirebaseRecyclerOptions.Builder<Contacts>()
+                            .setQuery(m_ContactRef, Contacts.class)
+                            .build();
+            FirebaseRecyclerAdapter<Contacts, ContactsViewHolder> adapter =
+                    new FirebaseRecyclerAdapter<Contacts, ContactsViewHolder>(options) {
+                        @Override
+                        protected void onBindViewHolder(@NonNull final ContactsViewHolder holder, final int position, @NonNull Contacts model) {
+                            String userIds = getRef(position).getKey();
+                            m_UsersRef.child(userIds).addValueEventListener(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        if (dataSnapshot.child("userState").hasChild("state")) {
+                                            String state = dataSnapshot.child("userState").child("state").getValue().toString();
+                                            if (state.equals("online")) {
+                                                holder.onlineIcon.setVisibility(View.VISIBLE);
+                                            } else if (state.equals("offline")) {
+                                                holder.onlineIcon.setVisibility(View.INVISIBLE);
+                                            }
+                                        } else {
 
-                                holder.onlineIcon.setVisibility(View.INVISIBLE);
-                            }
-                            if(dataSnapshot.hasChild("image"))
-                            {
-                                String userImage=dataSnapshot.child("image").getValue().toString();
-                                String profileStatus=dataSnapshot.child("status").getValue().toString();
-                                String profileName=dataSnapshot.child("name").getValue().toString();
-                                holder.username.setText(profileName);
-                                holder.userstatus.setText(profileStatus);
-                                Picasso.get().load(userImage).placeholder(R.drawable.profile_image).into(holder.profileImage);
-                            }
-                            else
-                            {
-                                String profileStatus=dataSnapshot.child("status").getValue().toString();
-                                String profileName=dataSnapshot.child("name").getValue().toString();
-                                holder.username.setText(profileName);
-                                holder.userstatus.setText(profileStatus);
-                            }
+                                            holder.onlineIcon.setVisibility(View.INVISIBLE);
+                                        }
+                                        if (dataSnapshot.hasChild("image")) {
+                                            String userImage = dataSnapshot.child("image").getValue().toString();
+                                            String profileStatus = dataSnapshot.child("status").getValue().toString();
+                                            String profileName = dataSnapshot.child("name").getValue().toString();
+                                            holder.username.setText(profileName);
+                                            holder.userstatus.setText(profileStatus);
+                                            Picasso.get().load(userImage).placeholder(R.drawable.profile_image).into(holder.profileImage);
+                                        } else {
+                                            String profileStatus = dataSnapshot.child("status").getValue().toString();
+                                            String profileName = dataSnapshot.child("name").getValue().toString();
+                                            holder.username.setText(profileName);
+                                            holder.userstatus.setText(profileStatus);
+                                        }
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                }
+                            });
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-            @NonNull
-            @Override//this function is used to inflate the layout which contains the user name and status and will show to recyclerview
-            public ContactsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.users_display_layout,parent,false);
-                ContactsViewHolder holder=new ContactsViewHolder(view);
-                return holder;
-            }
-        };
-        m_myContactList.setAdapter(adapter);
-        adapter.startListening();
+                        @NonNull
+                        @Override
+//this function is used to inflate the layout which contains the user name and status and will show to recyclerview
+                        public ContactsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+                            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_display_layout, parent, false);
+                            ContactsViewHolder holder = new ContactsViewHolder(view);
+                            return holder;
+                        }
+                    };
+            m_myContactList.setAdapter(adapter);
+            adapter.startListening();
+        }
     }
-    public static class ContactsViewHolder extends RecyclerView.ViewHolder
-    {
-        TextView username,userstatus;
+
+    public static class ContactsViewHolder extends RecyclerView.ViewHolder {
+        TextView username, userstatus;
         CircleImageView profileImage;
         ImageView onlineIcon;
 
         public ContactsViewHolder(@NonNull View itemView) {
             super(itemView);
-            username=itemView.findViewById(R.id.user_profile_name);
-            userstatus=itemView.findViewById(R.id.user_status);
-            profileImage=itemView.findViewById(R.id.users_profile_image);
-            onlineIcon=itemView.findViewById(R.id.user_online_status);
+            username = itemView.findViewById(R.id.user_profile_name);
+            userstatus = itemView.findViewById(R.id.user_status);
+            profileImage = itemView.findViewById(R.id.users_profile_image);
+            onlineIcon = itemView.findViewById(R.id.user_online_status);
         }
     }
 }

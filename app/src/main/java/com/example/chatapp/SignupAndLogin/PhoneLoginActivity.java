@@ -21,6 +21,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.hbb20.CountryCodePicker;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,21 +34,35 @@ public class PhoneLoginActivity extends AppCompatActivity {
     private PhoneAuthProvider.ForceResendingToken mResendToken;
     private FirebaseAuth mAuth;
     private ProgressDialog loadingBar;
+    private CountryCodePicker ccp;
+    private String selected_country_code;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone_login);
         mAuth=FirebaseAuth.getInstance();
         initializeVariables();
-
+        ccp = findViewById(R.id.ccp);
+        ccp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
+                    @Override
+                    public void onCountrySelected() {
+                        selected_country_code = ccp.getSelectedCountryCodeWithPlus();
+                    }
+                });
+            }
+        });
         m_send_verCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String phoneNumber=m_phoneNumber.getText().toString();
+                String phoneNumber=selected_country_code+m_phoneNumber.getText().toString();
                 if(TextUtils.isEmpty(phoneNumber))
                 {
-                    Toast.makeText(PhoneLoginActivity.this, "Enter phoe no...", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PhoneLoginActivity.this, "Enter phone no...", Toast.LENGTH_SHORT).show();
                 }
                 else
                     {
@@ -113,7 +128,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
                 loadingBar.dismiss();
                 Toast.makeText(PhoneLoginActivity.this, "OTP sent", Toast.LENGTH_SHORT).show();
                 m_send_verCodeButton.setVisibility(View.INVISIBLE);
-                m_phoneNumber.setVisibility(View.INVISIBLE);
+                m_phoneNumber.setVisibility(View.VISIBLE);
                 m_OTP.setVisibility(View.VISIBLE);
                 m_verifyButton.setVisibility(View.VISIBLE);
             }

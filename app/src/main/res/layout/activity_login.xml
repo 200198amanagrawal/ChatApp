@@ -71,10 +71,12 @@
                 android:layout_marginLeft="19dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="19dp"
-                android:background="@color/colorPrimary"
+                android:background="@drawable/gradient_button_color"
                 android:text="Login"
+                android:textAllCaps="false"
                 android:textColor="@color/cardview_light_background"
                 android:textSize="24sp" />
+
             <Button
                 android:id="@+id/phone_button"
                 android:layout_width="match_parent"
@@ -83,9 +85,11 @@
                 android:layout_marginLeft="19dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginRight="19dp"
-                android:background="@color/colorPrimary"
-                android:drawableLeft="@drawable/phone"
+                android:background="@drawable/gradient_button_color"
+                android:drawableLeft="@android:drawable/stat_sys_phone_call_forward"
                 android:text="Contact Number"
+                android:paddingLeft="15dp"
+                android:textAllCaps="false"
                 android:textColor="@color/cardview_light_background"
                 android:textSize="24sp" />
 

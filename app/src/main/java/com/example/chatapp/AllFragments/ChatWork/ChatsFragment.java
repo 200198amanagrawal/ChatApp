@@ -62,8 +62,9 @@ public class ChatsFragment extends Fragment {
         }
         else {
             m_CurrentUserID = mAuth.getCurrentUser().getUid();
+            m_ChatsRef= FirebaseDatabase.getInstance().getReference().child("Contacts").child(m_CurrentUserID);
+
         }
-        m_ChatsRef= FirebaseDatabase.getInstance().getReference().child("Contacts").child(m_CurrentUserID);
         m_UsersRef= FirebaseDatabase.getInstance().getReference().child("Users");
 
         return m_PrivateChatView;
@@ -72,6 +73,8 @@ public class ChatsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        if(m_ChatsRef!=null)
+        {
         FirebaseRecyclerOptions options=
                 new FirebaseRecyclerOptions.Builder<Contacts>()
                         .setQuery(m_ChatsRef,Contacts.class)
@@ -147,6 +150,7 @@ public class ChatsFragment extends Fragment {
                 };
         m_chatsList.setAdapter(adapter);
         adapter.startListening();
+        }
     }
     public static class ChatsViewHolder extends RecyclerView.ViewHolder
     {
