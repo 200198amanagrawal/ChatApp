@@ -384,6 +384,8 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        messagesList.clear();
         m_RootRef.child("Messages").child(m_msgSenderID).child(m_msgReceiverID).
                 removeEventListener(childEventListener);
     }
@@ -391,6 +393,7 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        messagesList.clear();
         m_RootRef.child("Messages").child(m_msgSenderID).child(m_msgReceiverID).
                 removeEventListener(childEventListener);
     }
