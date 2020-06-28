@@ -20,6 +20,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -92,6 +95,7 @@ public class ChatActivity extends AppCompatActivity {
 
 
         initializeControllers();
+
 
         m_Username.setText(m_msgReceiverName);
         Picasso.get().load(m_msgReceiverImage).placeholder(R.drawable.profile_image).into(m_UserImage);
@@ -233,12 +237,6 @@ public class ChatActivity extends AppCompatActivity {
                                 Toast.makeText(ChatActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
-                    }
-                }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                        double p=(100.0*taskSnapshot.getBytesTransferred())/taskSnapshot.getTotalByteCount();
-                        loadingBar.setMessage((int) p +"% loading....");
                     }
                 });
             }

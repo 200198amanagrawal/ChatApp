@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -44,18 +45,23 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
     public class MessageViewHolder extends RecyclerView.ViewHolder
     {
-        public TextView senderMsgText,receiverMsgText;
+        public TextView senderMsgText,receiverMsgText,senderImgOrDocName,receiverImgOrDocName;
         public CircleImageView receiverProfileImage;
 
-        public ImageView m_MessageSenderPicture, m_MessageReceiverPicture;
+        public LinearLayout m_MessageSenderPictureLayout, m_MessageReceiverPictureLayout;
+        public ImageView m_MessageSenderPicture,m_MessageReceiverPicture;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
             senderMsgText=itemView.findViewById(R.id.sender_message_text);
             receiverMsgText=itemView.findViewById(R.id.receiver_message_text);
             receiverProfileImage=itemView.findViewById(R.id.receiver_profile_image);
-            m_MessageReceiverPicture = itemView.findViewById(R.id.message_receiver_image_view);
-            m_MessageSenderPicture = itemView.findViewById(R.id.message_sender_image_view);
+            m_MessageReceiverPictureLayout = itemView.findViewById(R.id.message_receiver_image_view);
+            m_MessageSenderPictureLayout = itemView.findViewById(R.id.message_sender_image_view);
+            m_MessageSenderPicture=itemView.findViewById(R.id.sender_message_doc_or_image);
+            m_MessageReceiverPicture=itemView.findViewById(R.id.receiver_message_doc_or_image);
+            senderImgOrDocName=itemView.findViewById(R.id.sender_image_name);
+            receiverImgOrDocName=itemView.findViewById(R.id.receiver_image_name);
         }
     }
 
@@ -77,6 +83,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
         String fromUserID=messages.getFrom();
         String fromMessageType=messages.getType();
+        String filename=messages.getName();
         m_UserRef= FirebaseDatabase.getInstance().getReference().child("Users").child(fromUserID);
         m_UserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -96,8 +103,12 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         holder.receiverMsgText.setVisibility(View.GONE);
         holder.receiverProfileImage.setVisibility(View.GONE);
         holder.senderMsgText.setVisibility(View.GONE);
+        holder.m_MessageSenderPictureLayout.setVisibility(View.GONE);
         holder.m_MessageSenderPicture.setVisibility(View.GONE);
+        holder.m_MessageReceiverPictureLayout.setVisibility(View.GONE);
         holder.m_MessageReceiverPicture.setVisibility(View.GONE);
+        holder.senderImgOrDocName.setVisibility(View.GONE);
+        holder.receiverImgOrDocName.setVisibility(View.GONE);
 
         if(fromMessageType.equals("text"))
         {
@@ -119,15 +130,23 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         {
             if(fromUserID.equals(messageSenderId))
             {
+                holder.m_MessageSenderPictureLayout.setVisibility(View.VISIBLE);
                 holder.m_MessageSenderPicture.setVisibility(View.VISIBLE);
-                Picasso.get().load(messages.getMessage()).into(holder.m_MessageSenderPicture);
+                holder.senderImgOrDocName.setVisibility(View.VISIBLE);
+                holder.senderImgOrDocName.setText(filename+".jpg");
+                holder.m_MessageReceiverPicture.setBackgroundResource(R.drawable.send_image);
+             //   Picasso.get().load(messages.getMessage()).into(holder.m_MessageSenderPictureLayout);
 
             }
             else
             {
                 holder.receiverProfileImage.setVisibility(View.VISIBLE);
+                holder.m_MessageReceiverPictureLayout.setVisibility(View.VISIBLE);
                 holder.m_MessageReceiverPicture.setVisibility(View.VISIBLE);
-                Picasso.get().load(messages.getMessage()).into(holder.m_MessageReceiverPicture);
+                holder.receiverImgOrDocName.setVisibility(View.VISIBLE);
+                holder.receiverImgOrDocName.setText(filename+".jpg");
+                holder.m_MessageReceiverPicture.setBackgroundResource(R.drawable.send_image);
+            //    Picasso.get().load(messages.getMessage()).into(holder.m_MessageReceiverPictureLayout);
 
             }
         }
@@ -135,13 +154,19 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         {
             if(fromUserID.equals(messageSenderId))
             {
+                holder.m_MessageSenderPictureLayout.setVisibility(View.VISIBLE);
                 holder.m_MessageSenderPicture.setVisibility(View.VISIBLE);
-                holder.m_MessageReceiverPicture.setBackgroundResource(R.drawable.file);
+                holder.senderImgOrDocName.setVisibility(View.VISIBLE);
+                holder.senderImgOrDocName.setText(filename);
+                holder.m_MessageSenderPicture.setBackgroundResource(R.drawable.send_file);
             }
             else {
                 holder.receiverProfileImage.setVisibility(View.VISIBLE);
+                holder.m_MessageReceiverPictureLayout.setVisibility(View.VISIBLE);
                 holder.m_MessageReceiverPicture.setVisibility(View.VISIBLE);
-                holder.m_MessageReceiverPicture.setBackgroundResource(R.drawable.file);
+                holder.receiverImgOrDocName.setVisibility(View.VISIBLE);
+                holder.receiverImgOrDocName.setText(filename);
+                holder.m_MessageReceiverPicture.setBackgroundResource(R.drawable.send_file);
 
             }
         }
