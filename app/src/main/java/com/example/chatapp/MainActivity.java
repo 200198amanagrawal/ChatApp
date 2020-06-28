@@ -17,7 +17,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.chatapp.MenuActivities.FindFriends.FindFriendsActivity;
-import com.example.chatapp.MenuActivities.SettingsActivity;
+import com.example.chatapp.MenuActivities.ShowSettings;
+import com.example.chatapp.MenuActivities.UpdateProfileActivity;
 import com.example.chatapp.SignupAndLogin.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -105,12 +106,9 @@ public class MainActivity extends AppCompatActivity {
         m_dataBaseReference.child("Users").child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if((dataSnapshot.child("name").exists()))
+                if(!(dataSnapshot.child("name").exists()))
                 {
-                    Toast.makeText(MainActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    startSettingsActivity();
+                    startUpdateProfileActivity();
                 }
             }
 
@@ -125,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent intent=new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -146,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.settings:
                 updateUserOnlineStatus("online");
-                startSettingsActivity();
+                startShowSettingsActivity();
                 break;
             case R.id.find_friends:
                 updateUserOnlineStatus("online");
@@ -209,8 +208,12 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private void startSettingsActivity() {
-        Intent intent=new Intent(MainActivity.this, SettingsActivity.class);
+    private void startUpdateProfileActivity() {
+        Intent intent=new Intent(MainActivity.this, UpdateProfileActivity.class);
+        startActivity(intent);
+    }
+    private void startShowSettingsActivity() {
+        Intent intent=new Intent(MainActivity.this, ShowSettings.class);
         startActivity(intent);
     }
 

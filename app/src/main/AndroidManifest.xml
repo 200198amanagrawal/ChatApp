@@ -13,14 +13,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SplashScreen" android:noHistory="true">
+        <activity android:name=".MenuActivities.ShowSettings"></activity>
+        <activity
+            android:name=".SplashScreen"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AllFragments.ChatWork.ImageViewerActivity" android:parentActivityName=".AllFragments.ChatWork.ChatActivity" />
+        <activity
+            android:name=".AllFragments.ChatWork.ImageViewerActivity"
+            android:parentActivityName=".AllFragments.ChatWork.ChatActivity" />
         <activity
             android:name=".AllFragments.ChatWork.ChatActivity"
             android:parentActivityName=".MainActivity" />
@@ -31,13 +36,13 @@
         <activity android:name=".SignupAndLogin.PhoneLoginActivity" />
         <activity android:name=".AllFragments.GroupChats.GroupChatActivity" />
         <activity
-            android:name=".MenuActivities.SettingsActivity"
+            android:name=".MenuActivities.UpdateProfileActivity"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".SignupAndLogin.RegisterActivity" />
-        <activity android:name=".SignupAndLogin.LoginActivity" />
-        <activity android:name=".MainActivity">
-
-        </activity>
+        <activity
+            android:name=".SignupAndLogin.LoginActivity"
+            android:noHistory="true" />
+        <activity android:name=".MainActivity"></activity>
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />

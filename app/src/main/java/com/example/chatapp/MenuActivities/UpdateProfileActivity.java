@@ -36,7 +36,7 @@ import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SettingsActivity extends AppCompatActivity {
+public class UpdateProfileActivity extends AppCompatActivity {
 
     private CircleImageView m_updateImage;
     private Button m_updateButton;
@@ -51,7 +51,7 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_update_profile);
         initializeVariables();
         m_updateImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,7 +73,6 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
         RetrieveUserInfo();
-        m_updateUsername.setVisibility(View.INVISIBLE);
     }
 
     private void RetrieveUserInfo() {
@@ -89,7 +88,7 @@ public class SettingsActivity extends AppCompatActivity {
                            String status=dataSnapshot.child("status").getValue().toString();
                            m_updateUsername.setText(username);
                            m_updateStatus.setText(status);
-                           Picasso.get().load(image).into(m_updateImage);
+                           Picasso.get().load(image).placeholder(R.drawable.profile_image).into(m_updateImage);
                        }
                        else if((dataSnapshot.exists()) && (dataSnapshot.hasChild("name"))
                                &&(dataSnapshot.hasChild("status"))){
@@ -101,7 +100,7 @@ public class SettingsActivity extends AppCompatActivity {
                        else
                        {
                            m_updateUsername.setVisibility(View.VISIBLE);
-                           Toast.makeText(SettingsActivity.this, "Please enter data ...", Toast.LENGTH_SHORT).show();
+                           Toast.makeText(UpdateProfileActivity.this, "Please enter data ...", Toast.LENGTH_SHORT).show();
                        }
                     }
 
@@ -134,7 +133,7 @@ public class SettingsActivity extends AppCompatActivity {
                                         startMainActivity();
                                     } else {
                                         String message = task.getException().toString();
-                                        Toast.makeText(SettingsActivity.this, "Error : " + message, Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(UpdateProfileActivity.this, "Error : " + message, Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             } );
@@ -190,12 +189,12 @@ public class SettingsActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if(task.isSuccessful()){
-                                                            Toast.makeText(SettingsActivity.this, "Image saved in database successfuly", Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(UpdateProfileActivity.this, "Image saved in database successfuly", Toast.LENGTH_SHORT).show();
                                                             loadingBar.dismiss();
                                                         }
                                                         else{
                                                             String message = task.getException().toString();
-                                                            Toast.makeText(SettingsActivity.this, "Error: " + message,Toast.LENGTH_SHORT).show();
+                                                            Toast.makeText(UpdateProfileActivity.this, "Error: " + message,Toast.LENGTH_SHORT).show();
                                                             loadingBar.dismiss();
 
                                                         }
@@ -214,7 +213,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private void startMainActivity()
     {
-        Intent intent=new Intent(SettingsActivity.this, MainActivity.class);
+        Intent intent=new Intent(UpdateProfileActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();

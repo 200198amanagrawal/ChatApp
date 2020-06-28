@@ -117,7 +117,7 @@ public class FindFriendsActivity extends AppCompatActivity {
 //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //
-//        getMenuInflater().inflate(R.menu.app_bar_layout,menu);
+//        getMenuInflater().inflate(R.menu.search_view_menu,menu);
 //
 //        MenuItem searchItem=menu.findItem(R.id.search_view);
 //        SearchView searchView= findViewById(R.id.searching_friends);

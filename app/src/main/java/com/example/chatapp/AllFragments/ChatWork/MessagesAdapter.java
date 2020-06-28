@@ -39,6 +39,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     public MessagesAdapter (List<Messages> userMsgList)
     {
         this.userMsgList=userMsgList;
+        setHasStableIds(true);
     }
 
     public class MessageViewHolder extends RecyclerView.ViewHolder
@@ -65,7 +66,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
                 .inflate(R.layout.custom_messages_layout,parent,false);
         mAuth=FirebaseAuth.getInstance();
 
-        return new MessageViewHolder(view);
+        MessageViewHolder holder=new MessageViewHolder(view);
+        return holder;
     }
 
     @Override
@@ -122,8 +124,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
             }
             else
-                {
-                    holder.receiverProfileImage.setVisibility(View.VISIBLE);
+            {
+                holder.receiverProfileImage.setVisibility(View.VISIBLE);
                 holder.m_MessageReceiverPicture.setVisibility(View.VISIBLE);
                 Picasso.get().load(messages.getMessage()).into(holder.m_MessageReceiverPicture);
 
@@ -145,9 +147,9 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         }
         if(fromUserID.equals(messageSenderId))
         {
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View v) {
+                public boolean onLongClick(View v) {
                     if(userMsgList.get(position).getType().equals("pdf") ||userMsgList.get(position).getType().equals("docx"))
                     {
                         CharSequence options[]=new CharSequence[]
@@ -243,6 +245,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
                         builder.show();
 
                     }
+                    return false;
                 }
             });
         }
@@ -383,5 +386,15 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
             }
         });
 
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 }

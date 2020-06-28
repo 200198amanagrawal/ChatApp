@@ -59,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -103,7 +104,6 @@ public class LoginActivity extends AppCompatActivity {
                                                 if(task.isSuccessful())
                                                 {
                                                     startMainActivity();
-                                                    Toast.makeText(LoginActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                                                     progressDialog.dismiss();
                                                 }
                                             }
@@ -133,6 +133,7 @@ public class LoginActivity extends AppCompatActivity {
     {
         Intent intent=new Intent(LoginActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Toast.makeText(this, "Welcome", Toast.LENGTH_SHORT).show();
         startActivity(intent);
         finish();
     }

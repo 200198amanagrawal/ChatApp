@@ -35,7 +35,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private ProgressDialog loadingBar;
     private CountryCodePicker ccp;
-    private String selected_country_code;
+    private String selected_country_code="+91";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +44,13 @@ public class PhoneLoginActivity extends AppCompatActivity {
         mAuth=FirebaseAuth.getInstance();
         initializeVariables();
         ccp = findViewById(R.id.ccp);
-        ccp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+
                 ccp.setOnCountryChangeListener(new CountryCodePicker.OnCountryChangeListener() {
                     @Override
                     public void onCountrySelected() {
                         selected_country_code = ccp.getSelectedCountryCodeWithPlus();
                     }
                 });
-            }
-        });
         m_send_verCodeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -149,7 +145,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             loadingBar.dismiss();
-                            Toast.makeText(PhoneLoginActivity.this, "Congrats ..", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PhoneLoginActivity.this, "Welcome", Toast.LENGTH_SHORT).show();
                             sendUsertoMainActivity();
                         } else {
                             String exception=task.getException().toString();

@@ -75,6 +75,7 @@ public class ChatActivity extends AppCompatActivity {
     private StorageTask uploadTask;
     private Uri fileUri;
     private ProgressDialog loadingBar;
+    private ChildEventListener childEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,35 @@ public class ChatActivity extends AppCompatActivity {
         });
         displayLastSeen();
 
+        childEventListener=new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                Messages messages=dataSnapshot.getValue(Messages.class);
+                messagesList.add(messages);
+                messagesAdapter.notifyDataSetChanged();
+                m_UsersList.smoothScrollToPosition(m_UsersList.getAdapter().getItemCount());
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        };
 
         m_SendFilesButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -180,21 +210,21 @@ public class ChatActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(Uri uri) {
 
-                                        Map msgDocumentBody=new HashMap();
-                                        msgDocumentBody.put("message",uri.toString());
-                                        msgDocumentBody.put("name",fileUri.getLastPathSegment());
-                                        msgDocumentBody.put("type",checker);
-                                        msgDocumentBody.put("from",m_msgSenderID);
-                                        msgDocumentBody.put("to", m_msgReceiverID);
-                                        msgDocumentBody.put("messageID", msgPushID);
-                                        msgDocumentBody.put("time", saveCurrentTime);
-                                        msgDocumentBody.put("date", saveCurrentDate);
+                                Map msgDocumentBody=new HashMap();
+                                msgDocumentBody.put("message",uri.toString());
+                                msgDocumentBody.put("name",fileUri.getLastPathSegment());
+                                msgDocumentBody.put("type",checker);
+                                msgDocumentBody.put("from",m_msgSenderID);
+                                msgDocumentBody.put("to", m_msgReceiverID);
+                                msgDocumentBody.put("messageID", msgPushID);
+                                msgDocumentBody.put("time", saveCurrentTime);
+                                msgDocumentBody.put("date", saveCurrentDate);
 
-                                        Map msgBodyDetails=new HashMap();
-                                        msgBodyDetails.put(msgSenderRef+"/"+msgPushID,msgDocumentBody);
-                                        msgBodyDetails.put(msgReceiverRef+"/"+msgPushID,msgDocumentBody);
-                                        m_RootRef.updateChildren(msgBodyDetails);
-                                        loadingBar.dismiss();
+                                Map msgBodyDetails=new HashMap();
+                                msgBodyDetails.put(msgSenderRef+"/"+msgPushID,msgDocumentBody);
+                                msgBodyDetails.put(msgReceiverRef+"/"+msgPushID,msgDocumentBody);
+                                m_RootRef.updateChildren(msgBodyDetails);
+                                loadingBar.dismiss();
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -352,39 +382,25 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        m_RootRef.child("Messages").child(m_msgSenderID).child(m_msgReceiverID).
+                removeEventListener(childEventListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        m_RootRef.child("Messages").child(m_msgSenderID).child(m_msgReceiverID).
+                removeEventListener(childEventListener);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
 
         m_RootRef.child("Messages").child(m_msgSenderID).child(m_msgReceiverID)
-                .addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                        Messages messages=dataSnapshot.getValue(Messages.class);
-                        messagesList.add(messages);
-                        messagesAdapter.notifyDataSetChanged();
-                        m_UsersList.smoothScrollToPosition(m_UsersList.getAdapter().getItemCount());
-                    }
-
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
+                .addChildEventListener(childEventListener);
     }
 
     private void sendMsg() {
@@ -418,7 +434,6 @@ public class ChatActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task task) {
                     if(task.isSuccessful())
                     {
-                        Toast.makeText(ChatActivity.this, "Msg sent", Toast.LENGTH_SHORT).show();
                     }
                     else {
                         Toast.makeText(ChatActivity.this, "Error", Toast.LENGTH_SHORT).show();

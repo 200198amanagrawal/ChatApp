@@ -93,6 +93,7 @@ public class RegisterActivity extends AppCompatActivity {
         Intent intent=new Intent(RegisterActivity.this, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        Toast.makeText(this, "Welcome", Toast.LENGTH_SHORT).show();
         finish();
     }
 

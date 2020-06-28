@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
@@ -17,9 +16,11 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/receiver_profile_image"
         android:background="@drawable/receiver_messages_layout"
         android:text="receiver messages here..."
+        android:maxWidth="200dp"
         android:padding="10dp"
         android:textSize="14sp"
         />
@@ -51,6 +52,7 @@
         android:layout_alignParentTop="@+id/receiver_message_text"
         android:layout_alignParentRight="true"
         android:padding="10dp"
+        android:maxWidth="200dp"
         android:textSize="14sp"
 
         />
