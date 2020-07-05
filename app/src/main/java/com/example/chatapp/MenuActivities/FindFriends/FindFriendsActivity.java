@@ -9,8 +9,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -58,7 +62,6 @@ public class FindFriendsActivity extends AppCompatActivity {
 
         searchView= findViewById(R.id.searching_friends);
 
-//        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -125,32 +128,30 @@ public class FindFriendsActivity extends AppCompatActivity {
         }
 
     }
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//
-//        getMenuInflater().inflate(R.menu.search_view_menu,menu);
-//
-//        MenuItem searchItem=menu.findItem(R.id.search_view);
-//        SearchView searchView= findViewById(R.id.searching_friends);
-//
-////        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
-//
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                firebaseSearch(query);
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                firebaseSearch(newText);
-//                return false;
-//            }
-//        });
-//
-//        return true;
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.search_view_menu,menu);
+        MenuItem searchItem=menu.findItem(R.id.search_view);
+        SearchView searchView= (SearchView) searchItem.getActionView();
+
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                firebaseSearch(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                firebaseSearch(newText);
+                return false;
+            }
+        });
+
+        return true;
+    }
 
     private void firebaseSearch(String searchText)
     {
@@ -187,8 +188,11 @@ public class FindFriendsActivity extends AppCompatActivity {
                                 }
                                 else {
                                     holder.itemView.setVisibility(View.GONE);
-                                    holder.itemView.setScaleX(0);
-                                    holder.itemView.setScaleY(0);
+                                    View view=holder.itemView;
+                                    ViewGroup.LayoutParams layoutParams=view.getLayoutParams();
+                                    layoutParams.width=0;
+                                    layoutParams.height=0;
+                                    view.setLayoutParams(layoutParams);
                                 }
                             }
                         }
