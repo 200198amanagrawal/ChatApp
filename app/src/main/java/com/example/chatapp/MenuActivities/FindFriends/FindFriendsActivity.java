@@ -174,6 +174,7 @@ public class FindFriendsActivity extends AppCompatActivity {
                                 if(name.contains(query))
                                 {
                                     holder.username.setText(model.getName());
+                                    //holder.username.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
                                     holder.userstatus.setText(model.getStatus());
                                     Picasso.get().load(model.getImage()).placeholder(R.drawable.profile_image).into(holder.profileImage);
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {

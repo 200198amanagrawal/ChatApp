@@ -6,9 +6,13 @@
     tools:context=".AllFragments.RequestFragment">
 
     <!-- TODO: Update blank fragment layout -->
-
+    <SearchView
+        android:id="@+id/searching_request"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chat_request_list"
+        android:layout_below="@+id/searching_request"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </RelativeLayout>
