@@ -12,8 +12,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/users_profile_image"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:src="@drawable/profile_image"
             app:civ_border_width="2dp"
             app:civ_border_color="@color/colorPrimaryDark"/>
@@ -31,9 +31,8 @@
                     android:layout_height="wrap_content"
                     android:text="Username"
                     android:textAlignment="textStart"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:layout_marginLeft="10dp"
-                    android:textStyle="bold"
                     android:gravity="start" />
                 <ImageView
                     android:id="@+id/user_online_status"
@@ -43,6 +42,15 @@
                     android:src="@drawable/online"
                     android:visibility="invisible"
                     />
+
+                <CheckBox
+                    android:id="@+id/select_data"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:visibility="invisible"
+                    android:layout_marginTop="18dp"
+                    android:button="@drawable/custom_checkbox"
+                    android:fadingEdge="none" />
             </LinearLayout>
             <TextView
                 android:id="@+id/user_status"
@@ -50,36 +58,35 @@
                 android:layout_height="wrap_content"
                 android:text="status"
                 android:layout_marginLeft="10dp"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
+
                 <Button
                     android:id="@+id/request_accept_button"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
-                    android:text="Accept"
-                    android:textSize="16sp"
                     android:layout_marginLeft="10dp"
+                    android:background="@color/design_default_color_secondary"
+                    android:text="Accept"
                     android:textAllCaps="false"
-                    android:background="@android:color/holo_green_light"
-                    android:visibility="invisible"
-                    />
+                    android:textSize="16sp"
+                    android:visibility="invisible" />
+
                 <Button
                     android:id="@+id/request_reject_button"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
+                    android:background="@color/design_default_color_secondary_variant"
                     android:text="Reject"
-                    android:textSize="16sp"
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
-                    android:background="@android:color/holo_red_dark"
-                    android:visibility="invisible"
-                    />
+                    android:textSize="16sp"
+                    android:visibility="invisible" />
             </LinearLayout>
         </LinearLayout>
 

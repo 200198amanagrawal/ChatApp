@@ -153,7 +153,8 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.create_groups:
                 updateUserOnlineStatus("online");
-                createNewGroups();
+                Intent intent=new Intent(MainActivity.this,GroupSelectionActivity.class);
+                startActivity(intent);
                 break;
                 default:
                     break;

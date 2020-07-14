@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GroupSelectionActivity"
+    android:orientation="vertical">
+    <include
+        android:id="@+id/find_group_contact_toolbar"
+        layout="@layout/app_bar_layout"
+        />
+
+    <SearchView
+        android:layout_below="@+id/find_group_contact_toolbar"
+        android:id="@+id/searching_group_contact"
+        android:layout_width="match_parent"
+        android:layout_height="50dp" />
+    <LinearLayout
+        android:layout_below="@id/searching_group_contact"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:id="@+id/layout_contain_info">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/selected_contacts"
+            android:textSize="17sp"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="30dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_below="@+id/searching_group_contact"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/send_group_users_data"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/arrow_forward"
+            app:civ_circle_background_color="@color/colorPrimaryDark"
+            app:civ_border_color="@color/colorPrimaryDark"
+            app:civ_border_width="2dp" />
+
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/find_group_contact_recycler_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/layout_contain_info"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        />
+
+
+</RelativeLayout>

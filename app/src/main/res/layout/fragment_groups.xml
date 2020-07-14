@@ -5,8 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".AllFragments.GroupChats.GroupsFragment">
 
-    <ListView
+    <SearchView
+        android:id="@+id/searching_contacts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/chatGroups"/>
+        android:layout_height="50dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_below="@+id/searching_contacts"
+        android:id="@+id/searchingGroups"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </RelativeLayout>
