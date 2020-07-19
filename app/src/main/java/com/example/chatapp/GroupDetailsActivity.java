@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.chatapp.AllFragments.GroupChats.GroupsFragment;
 import com.example.chatapp.AllFragments.ModelClass.GroupDetails;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,7 +22,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -48,7 +52,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         m_currentUserID = mAuth.getCurrentUser().getUid();
         m_GroupRef= FirebaseDatabase.getInstance().getReference().child("GroupDetails");
-        m_GroupRefChat= FirebaseDatabase.getInstance().getReference().child("GroupChat");
+        m_GroupRefChat= FirebaseDatabase.getInstance().getReference().child("GroupMessages");
         m_GroupUserIds= (HashSet<String>) getIntent().getExtras().get("UserIds");
         m_GroupUserIds.add(m_currentUserID);
         m_GroupName=findViewById(R.id.groupName);
@@ -72,34 +76,48 @@ public class GroupDetailsActivity extends AppCompatActivity {
 
     private void createGroup()
     {
-        GroupDetails groupDetails=new GroupDetails("",m_GroupName.getText().toString());
-        String groupRefID=m_GroupRef.push().getKey();
+        Map<String,Object> hashMap=new HashMap<>();
+        for (String userID:m_GroupUserIds)
+        {
+            hashMap.put(userID,"");
+        }
+        final GroupDetails groupDetails=new GroupDetails("",m_GroupName.getText().toString());
+        final String groupRefID=m_GroupRef.push().getKey();
         m_GroupRef.child(groupRefID).setValue(groupDetails).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful())
                 {
                     Toast.makeText(GroupDetailsActivity.this, "Group Details Saved", Toast.LENGTH_SHORT).show();
+                    Intent intent=new Intent(GroupDetailsActivity.this,MainActivity.class);
+//
+//                    intent.putExtra("userIDs",m_GroupUserIds);
+//                    intent.putExtra("groupName",m_GroupName.getText().toString());
+//                    intent.putExtra("groupID",groupRefID);
+                    startActivity(intent);
                 }
             }
         });
+        m_GroupRef.child(groupRefID).child("userIDs").updateChildren(hashMap);
         for(String userID:m_GroupUserIds)
         {
-                    m_GroupRefChat.child(groupRefID).child(userID).setValue("").addOnCompleteListener(
-                            new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if(task.isSuccessful())
-                                    {
-                                        Toast.makeText(GroupDetailsActivity.this, "Group Created Successfully", Toast.LENGTH_SHORT).show();
-                                        Intent intent=new Intent(GroupDetailsActivity.this,MainActivity.class);
-                                        startActivity(intent);
-                                    }
-                                }
-                            }
-                    );
-
+            m_GroupRefChat.child(groupRefID).child(userID).setValue("");
         }
+//        for(String userID:m_GroupUserIds)
+//        {
+//                    m_GroupRefChat.child(groupRefID).child(userID).setValue("").addOnCompleteListener(
+//                            new OnCompleteListener<Void>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Void> task) {
+//                                    if(task.isSuccessful())
+//                                    {
+//                                        Toast.makeText(GroupDetailsActivity.this, "Group Created Successfully", Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//                            }
+//                    );
+//
+//        }
     }
 
 }

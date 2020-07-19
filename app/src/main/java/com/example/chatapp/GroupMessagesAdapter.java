@@ -1,4 +1,4 @@
-package com.example.chatapp.AllFragments.ChatWork;
+package com.example.chatapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.chatapp.AllFragments.ChatWork.ImageViewerActivity;
 import com.example.chatapp.AllFragments.ModelClass.Messages;
-import com.example.chatapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,25 +26,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import java.util.HashSet;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder> {
+public class GroupMessagesAdapter extends RecyclerView.Adapter<GroupMessagesAdapter.MessageViewHolder> {
 
     private List<Messages> userMsgList;
     private FirebaseAuth mAuth;
     private DatabaseReference m_UserRef;
-    private String m_GroupID;
-    private HashSet<String> m_userIDs;
 
 
-    public MessagesAdapter (List<Messages> userMsgList)
+    public GroupMessagesAdapter (List<Messages> userMsgList)
     {
         this.userMsgList=userMsgList;
         setHasStableIds(true);
-
     }
 
     public class MessageViewHolder extends RecyclerView.ViewHolder
@@ -86,8 +82,10 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         Messages messages=userMsgList.get(position);
 
         String fromUserID=messages.getFrom();
+        String sentOrReceived=messages.getSentOrReceived();
         String fromMessageType=messages.getType();
         String filename=messages.getName();
+
         m_UserRef= FirebaseDatabase.getInstance().getReference().child("Users").child(fromUserID);
         m_UserRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -116,7 +114,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
         if(fromMessageType.equals("text"))
         {
-            if(fromUserID.equals(messageSenderId))
+            if(sentOrReceived.equals("sent"))
             {
                 holder.senderMsgText.setVisibility(View.VISIBLE);
                 holder.senderMsgText.setBackgroundResource(R.drawable.sender_messages_layout);
@@ -132,14 +130,14 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         }
         else if(fromMessageType.equals("Images"))
         {
-            if(fromUserID.equals(messageSenderId))
+            if(sentOrReceived.equals("sent"))
             {
                 holder.m_MessageSenderPictureLayout.setVisibility(View.VISIBLE);
                 holder.m_MessageSenderPicture.setVisibility(View.VISIBLE);
                 holder.senderImgOrDocName.setVisibility(View.VISIBLE);
                 holder.senderImgOrDocName.setText(filename+".jpg");
                 holder.m_MessageReceiverPicture.setBackgroundResource(R.drawable.send_image);
-             //   Picasso.get().load(messages.getMessage()).into(holder.m_MessageSenderPictureLayout);
+                //   Picasso.get().load(messages.getMessage()).into(holder.m_MessageSenderPictureLayout);
 
             }
             else
@@ -150,13 +148,13 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
                 holder.receiverImgOrDocName.setVisibility(View.VISIBLE);
                 holder.receiverImgOrDocName.setText(filename+".jpg");
                 holder.m_MessageReceiverPicture.setBackgroundResource(R.drawable.send_image);
-            //    Picasso.get().load(messages.getMessage()).into(holder.m_MessageReceiverPictureLayout);
+                //    Picasso.get().load(messages.getMessage()).into(holder.m_MessageReceiverPictureLayout);
 
             }
         }
         else
         {
-            if(fromUserID.equals(messageSenderId))
+            if(sentOrReceived.equals("sent"))
             {
                 holder.m_MessageSenderPictureLayout.setVisibility(View.VISIBLE);
                 holder.m_MessageSenderPicture.setVisibility(View.VISIBLE);
@@ -174,7 +172,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
             }
         }
-        if(fromUserID.equals(messageSenderId))
+        if(sentOrReceived.equals("sent"))
         {
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -353,7 +351,7 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
                                 }
                                 else if(which==1)
                                 {
-                                    Intent intent=new Intent(holder.itemView.getContext(),ImageViewerActivity.class);
+                                    Intent intent=new Intent(holder.itemView.getContext(), ImageViewerActivity.class);
                                     intent.putExtra("url",userMsgList.get(position).getMessage());
                                     holder.itemView.getContext().startActivity(intent);
                                 }
@@ -376,8 +374,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     private void deleteSendMsg(final int postion,final MessageViewHolder holder)
     {
         DatabaseReference rootRef=FirebaseDatabase.getInstance().getReference();
-        rootRef.child("Messages")
-                .child(userMsgList.get(postion).getFrom())
+        rootRef.child("GroupMessages")
+                .child(userMsgList.get(postion).getGroupID())
                 .child(userMsgList.get(postion).getTo())
                 .child(userMsgList.get(postion).getMessageID())
                 .removeValue();
@@ -386,7 +384,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     private void deleteReceiveMsg(final int postion,final MessageViewHolder holder)
     {
         DatabaseReference rootRef=FirebaseDatabase.getInstance().getReference();
-        rootRef.child("Messages")
+        rootRef.child("GroupMessages")
+                .child(userMsgList.get(postion).getGroupID())
                 .child(userMsgList.get(postion).getTo())
                 .child(userMsgList.get(postion).getFrom())
                 .child(userMsgList.get(postion).getMessageID())
@@ -396,7 +395,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
     private void deleteMsgForEveryone(final int postion,final MessageViewHolder holder)
     {
         final DatabaseReference rootRef=FirebaseDatabase.getInstance().getReference();
-        rootRef.child("Messages")
+        rootRef.child("GroupMessages")
+                .child(userMsgList.get(postion).getGroupID())
                 .child(userMsgList.get(postion).getFrom())
                 .child(userMsgList.get(postion).getTo())
                 .child(userMsgList.get(postion).getMessageID())
@@ -405,7 +405,8 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful())
                 {
-                    rootRef.child("Messages")
+                    rootRef.child("GroupMessages")
+                            .child(userMsgList.get(postion).getGroupID())
                             .child(userMsgList.get(postion).getTo())
                             .child(userMsgList.get(postion).getFrom())
                             .child(userMsgList.get(postion).getMessageID())

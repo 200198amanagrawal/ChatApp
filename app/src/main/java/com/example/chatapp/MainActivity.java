@@ -1,27 +1,20 @@
 package com.example.chatapp;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.chatapp.MenuActivities.FindFriends.FindFriendsActivity;
 import com.example.chatapp.MenuActivities.ShowSettings;
 import com.example.chatapp.MenuActivities.UpdateProfileActivity;
 import com.example.chatapp.SignupAndLogin.LoginActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,8 +25,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,7 +60,10 @@ public class MainActivity extends AppCompatActivity {
         m_TabLayout=findViewById(R.id.main_tabs);
         //this will take all the tabs such as chats,contacts groups
         m_TabLayout.setupWithViewPager(m_ViewPager);
+
+
     }
+
 
     @Override
     protected void onStart() {
@@ -166,47 +164,6 @@ public class MainActivity extends AppCompatActivity {
         Intent intent=new Intent(MainActivity.this, FindFriendsActivity.class);
         // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
-    }
-
-    private void createNewGroups() {
-        AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this,R.style.AlertDialog);
-        builder.setTitle("Enter Group Name");
-        final EditText groupNameField=new EditText(MainActivity.this);
-        groupNameField.setHint("e.g. Some cafe..");
-        builder.setView(groupNameField);
-        builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String groupName=groupNameField.getText().toString();
-                if(TextUtils.isEmpty(groupName))
-                {
-                    Toast.makeText(MainActivity.this, "Please enter some group name", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    createSingleGroup(groupName);
-                }
-            }
-        });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-        builder.show();
-    }
-
-    private void createSingleGroup(final String groupName) {
-        m_dataBaseReference.child("Groups").child(groupName).setValue("")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if(task.isSuccessful())
-                        {
-                            Toast.makeText(MainActivity.this, groupName+"is created sucessfully", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
     }
 
     private void startUpdateProfileActivity() {

@@ -3,31 +3,33 @@ package com.example.chatapp.AllFragments.GroupChats;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SearchView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.chatapp.AllFragments.ModelClass.GroupDetails;
+import com.example.chatapp.Group_ChatActivity;
+import com.example.chatapp.MainActivity;
 import com.example.chatapp.R;
 import com.example.chatapp.SignupAndLogin.LoginActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,6 +49,9 @@ public class GroupsFragment extends Fragment {
     private FirebaseRecyclerOptions<GroupDetails> options;
     String m_CurrentUserID;
     private DatabaseReference m_GroupsChatRef;
+    ArrayList<String> userIDs;
+    private String groupName;
+    private String groupID;
 
     public GroupsFragment() {
         // Required empty public constructor
@@ -62,6 +67,8 @@ public class GroupsFragment extends Fragment {
 
         m_findFreindsRecyclerView=groupFragmentView.findViewById(R.id.searchingGroups);
         m_findFreindsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+
         if (mAuth.getCurrentUser() == null) {
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
@@ -69,7 +76,7 @@ public class GroupsFragment extends Fragment {
         else {
             m_CurrentUserID = mAuth.getCurrentUser().getUid();
             m_GroupsRef = FirebaseDatabase.getInstance().getReference().child("GroupDetails");
-            m_GroupsChatRef = FirebaseDatabase.getInstance().getReference().child("GroupChat");
+      //      m_GroupsChatRef = FirebaseDatabase.getInstance().getReference().child("GroupChat");
         }
         searchView=groupFragmentView.findViewById(R.id.searching_contacts);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -88,6 +95,7 @@ public class GroupsFragment extends Fragment {
         return groupFragmentView;
     }
 
+
     @Override
     public void onStart() {
         super.onStart();
@@ -97,13 +105,31 @@ public class GroupsFragment extends Fragment {
         adapter=new FirebaseRecyclerAdapter<GroupDetails, GroupFragmentHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull final GroupFragmentHolder holder, final int position, @NonNull final GroupDetails model) {
-                String groupRefID=getRef(position).getKey();
-                m_GroupsChatRef.child(groupRefID).child(m_CurrentUserID).addValueEventListener(new ValueEventListener() {
+                final String groupRefID=getRef(position).getKey();
+                m_GroupsRef.child(groupRefID).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists())
+                    public void onDataChange(@NonNull final DataSnapshot snapshot) {
+                        if(snapshot.exists() && snapshot.child("userIDs").hasChild(m_CurrentUserID))
                         {
                             holder.username.setText(model.getGroupName());
+                            LinearLayout.LayoutParams params=new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                                    LinearLayout.LayoutParams.WRAP_CONTENT);
+                            params.setMargins(30,40,0,0);
+                            holder.username.setLayoutParams(params);
+                            holder.userstatus.setText("");
+                            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    Intent intent=new Intent(getContext(), Group_ChatActivity.class);
+                                    intent.putExtra("userIDs",(HashMap<String,Object>)snapshot.child("userIDs").getValue());
+                                    intent.putExtra("groupName",model.getGroupName());
+                                    intent.putExtra("groupID",groupRefID);
+                                    startActivity(intent);
+                                }
+                            });
+                        }
+                        else {
+                            hideExtraGroupDetails(holder);
                         }
                     }
 
@@ -124,6 +150,15 @@ public class GroupsFragment extends Fragment {
         };
         m_findFreindsRecyclerView.setAdapter(adapter);
         adapter.startListening();
+    }
+
+    private void hideExtraGroupDetails(@NonNull GroupFragmentHolder holder) {
+        holder.itemView.setVisibility(View.GONE);
+        View view=holder.itemView;
+        ViewGroup.LayoutParams layoutParams=view.getLayoutParams();
+        layoutParams.width=0;
+        layoutParams.height=0;
+        view.setLayoutParams(layoutParams);
     }
 
     public static class GroupFragmentHolder extends RecyclerView.ViewHolder

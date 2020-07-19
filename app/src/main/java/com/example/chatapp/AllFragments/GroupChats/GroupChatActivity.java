@@ -112,7 +112,7 @@ public class GroupChatActivity extends AppCompatActivity {
     }
 
     private void initializeFields() {
-        m_toolbar=findViewById(R.id.group_chat_toolbar);
+        m_toolbar=findViewById(R.id.chat_toolbar);
         setSupportActionBar(m_toolbar);
         getSupportActionBar().setTitle(m_currentGroupName);
         m_sendMsgButton =findViewById(R.id.send_message);

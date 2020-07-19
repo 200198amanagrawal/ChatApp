@@ -117,7 +117,6 @@ public class ChatsFragment extends Fragment {
                                         retImage[0] =dataSnapshot.child("image").getValue().toString();
                                         Picasso.get().load(retImage[0]).placeholder(R.drawable.profile_image).into(holder.profileImage);
                                     }
-                                    String retStatus=dataSnapshot.child("status").getValue().toString();
                                     final String retName=dataSnapshot.child("name").getValue().toString();
                                     holder.username.setText(retName);
                                     if(dataSnapshot.child("userState").hasChild("state"))

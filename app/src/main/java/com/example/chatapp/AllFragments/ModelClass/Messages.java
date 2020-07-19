@@ -2,7 +2,7 @@ package com.example.chatapp.AllFragments.ModelClass;
 
 public class Messages
 {
-    private String from, message, type, to, messageID, time, date, name;
+    private String from, message, type, to, messageID, time, date, name,groupID,sentOrReceived;
 
     public Messages()
     {
@@ -82,5 +82,35 @@ public class Messages
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getGroupID() {
+        return groupID;
+    }
+
+    public Messages(String from, String message, String type, String to, String messageID
+            , String time, String date, String name, String groupID,String sentOrReceived) {
+        this.from = from;
+        this.message = message;
+        this.type = type;
+        this.to = to;
+        this.messageID = messageID;
+        this.time = time;
+        this.date = date;
+        this.name = name;
+        this.groupID = groupID;
+        this.sentOrReceived=sentOrReceived;
+    }
+
+    public void setGroupID(String groupID) {
+        this.groupID = groupID;
+    }
+
+    public String getSentOrReceived() {
+        return sentOrReceived;
+    }
+
+    public void setSentOrReceived(String sentOrReceived) {
+        this.sentOrReceived = sentOrReceived;
     }
 }

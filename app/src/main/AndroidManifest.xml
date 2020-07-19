@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GroupDetailsActivity"></activity>
+        <activity android:name=".Group_ChatActivity"></activity>
+        <activity android:name=".GroupDetailsActivity" />
         <activity android:name=".GroupSelectionActivity" />
         <activity android:name=".MenuActivities.ShowSettings" />
         <activity

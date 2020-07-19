@@ -7,14 +7,14 @@
     tools:context=".AllFragments.GroupChats.GroupChatActivity">
 
     <include
-        android:id="@+id/group_chat_toolbar"
+        android:id="@+id/chat_toolbar"
         layout="@layout/app_bar_layout"
         />
     <ScrollView
         android:id="@+id/group_chat_scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/group_chat_toolbar"
+        android:layout_below="@+id/chat_toolbar"
         android:layout_above="@id/mylinearlayout"
         >
         <LinearLayout
