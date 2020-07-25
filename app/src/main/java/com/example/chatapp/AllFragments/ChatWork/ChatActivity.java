@@ -20,9 +20,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.chatapp.AllFragments.ChatWork.VideoChat.CallingActivity;
 import com.example.chatapp.AllFragments.ModelClass.Messages;
 import com.example.chatapp.R;
 import com.google.android.gms.tasks.Continuation;
@@ -75,6 +77,7 @@ public class ChatActivity extends AppCompatActivity {
     private Uri fileUri;
     private ProgressDialog loadingBar;
     private ChildEventListener childEventListener;
+    private ImageView m_VideoCam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +95,16 @@ public class ChatActivity extends AppCompatActivity {
 
         initializeControllers();
 
+        m_VideoCam.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(ChatActivity.this, CallingActivity.class);
+                intent.putExtra("receiverID",m_msgReceiverID);
+                intent.putExtra("receiverName",m_msgReceiverName);
+                intent.putExtra("receiverImage",m_msgReceiverImage);
+                startActivity(intent);
+            }
+        });
 
         m_Username.setText(m_msgReceiverName);
         Picasso.get().load(m_msgReceiverImage).placeholder(R.drawable.profile_image).into(m_UserImage);
@@ -338,6 +351,7 @@ public class ChatActivity extends AppCompatActivity {
         SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
         saveCurrentTime = currentTime.format(calendar.getTime());
         loadingBar=new ProgressDialog(this);
+        m_VideoCam=findViewById(R.id.start_call);
     }
 
     private void displayLastSeen()

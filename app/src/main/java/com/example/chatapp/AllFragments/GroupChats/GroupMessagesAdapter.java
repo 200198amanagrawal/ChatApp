@@ -1,4 +1,4 @@
-package com.example.chatapp;
+package com.example.chatapp.AllFragments.GroupChats;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapp.AllFragments.ChatWork.ImageViewerActivity;
 import com.example.chatapp.AllFragments.ModelClass.Messages;
+import com.example.chatapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;

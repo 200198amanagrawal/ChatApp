@@ -39,4 +39,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.4.3'
     implementation 'com.firebaseui:firebase-ui-database:6.2.1'
     implementation 'com.hbb20:ccp:1.7.1'
+    implementation 'pub.devrel:easypermissions:0.4.0'
+    implementation 'com.opentok.android:opentok-android-sdk:2.15.3'
 }

@@ -1,4 +1,4 @@
-package com.example.chatapp;
+package com.example.chatapp.AllFragments.GroupChats;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,19 +10,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.chatapp.AllFragments.GroupChats.GroupsFragment;
 import com.example.chatapp.AllFragments.ModelClass.GroupDetails;
+import com.example.chatapp.MainActivity;
+import com.example.chatapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -89,7 +85,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
                 if(task.isSuccessful())
                 {
                     Toast.makeText(GroupDetailsActivity.this, "Group Details Saved", Toast.LENGTH_SHORT).show();
-                    Intent intent=new Intent(GroupDetailsActivity.this,MainActivity.class);
+                    Intent intent=new Intent(GroupDetailsActivity.this, MainActivity.class);
 //
 //                    intent.putExtra("userIDs",m_GroupUserIds);
 //                    intent.putExtra("groupName",m_GroupName.getText().toString());

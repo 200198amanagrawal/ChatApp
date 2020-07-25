@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AllFragments.ChatWork.VideoChat.CallingActivity">
+
+    <ImageView
+        android:id="@+id/receiver_calling_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/profile_image"></ImageView>
+
+    <TextView
+        android:id="@+id/receiver_calling_userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="User name is here"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:textColor="#FFFFFF"
+        android:textSize="28sp" />
+
+    <TextView
+        android:id="@+id/receiver_calling"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calling..."
+        android:layout_centerHorizontal="true"
+        android:layout_alignBottom="@id/receiver_calling_image"
+        android:textColor="#000000"
+        android:layout_marginBottom="140dp"
+        android:textSize="28sp" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/receiver_end_call"
+        android:layout_width="60dp"
+        app:civ_border_width="0dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@id/receiver_calling_image"
+        android:layout_centerHorizontal="true"
+        android:layout_alignLeft="@+id/receiver_receive_call"
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="150dp"
+        android:scaleType="centerCrop"
+        app:civ_circle_background_color="#D32F2F"
+        android:src="@drawable/endcall" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/receiver_receive_call"
+        android:layout_width="60dp"
+        android:visibility="gone"
+        app:civ_border_width="0dp"
+        android:layout_height="60dp"
+        android:layout_alignBottom="@id/receiver_calling_image"
+        android:layout_marginLeft="100dp"
+        android:layout_marginBottom="80dp"
+        android:scaleType="centerCrop"
+        app:civ_circle_background_color="#3F6335"
+        android:src="@drawable/call_contact" />
+</RelativeLayout>

@@ -3,7 +3,6 @@ package com.example.chatapp.AllFragments.GroupChats;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +14,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.chatapp.AllFragments.ModelClass.GroupDetails;
-import com.example.chatapp.Group_ChatActivity;
-import com.example.chatapp.MainActivity;
 import com.example.chatapp.R;
 import com.example.chatapp.SignupAndLogin.LoginActivity;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -120,7 +117,7 @@ public class GroupsFragment extends Fragment {
                             holder.itemView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    Intent intent=new Intent(getContext(), Group_ChatActivity.class);
+                                    Intent intent=new Intent(getContext(), GroupChatActivity.class);
                                     intent.putExtra("userIDs",(HashMap<String,Object>)snapshot.child("userIDs").getValue());
                                     intent.putExtra("groupName",model.getGroupName());
                                     intent.putExtra("groupID",groupRefID);

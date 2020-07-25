@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.SearchView;
 import android.widget.TextView;
 
+import com.example.chatapp.AllFragments.ChatWork.VideoChat.CallingActivity;
 import com.example.chatapp.AllFragments.ModelClass.Contacts;
 import com.example.chatapp.R;
 import com.example.chatapp.SignupAndLogin.LoginActivity;
@@ -42,7 +43,7 @@ public class ContactsFragment extends Fragment {
     private RecyclerView m_myContactList;
     private DatabaseReference m_ContactRef, m_UsersRef;
     private FirebaseAuth mAuth;
-    private String m_currentUserID;
+    private String m_currentUserID,calledBy="";
     private SearchView searchView;
 
     public ContactsFragment() {
@@ -62,14 +63,13 @@ public class ContactsFragment extends Fragment {
         if (mAuth.getCurrentUser() == null) {
             Intent intent = new Intent(getContext(), LoginActivity.class);
             startActivity(intent);
-        }
-        else {
+        } else {
             m_currentUserID = mAuth.getCurrentUser().getUid();
             m_ContactRef = FirebaseDatabase.getInstance().getReference().child("Contacts").child(m_currentUserID);
         }
         m_UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
-        searchView=m_ContactsView.findViewById(R.id.searching_contacts);
+        searchView = m_ContactsView.findViewById(R.id.searching_contacts);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -91,6 +91,8 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
+        checkforReceivingCall();
         if (m_ContactRef != null) {
             FirebaseRecyclerOptions options =
                     new FirebaseRecyclerOptions.Builder<Contacts>()
@@ -153,6 +155,7 @@ public class ContactsFragment extends Fragment {
         }
     }
 
+
     public static class ContactsViewHolder extends RecyclerView.ViewHolder {
         TextView username, userstatus;
         CircleImageView profileImage;
@@ -166,9 +169,10 @@ public class ContactsFragment extends Fragment {
             onlineIcon = itemView.findViewById(R.id.user_online_status);
         }
     }
+
     private void firebaseSearch(String searchText) {
         if (m_ContactRef != null) {
-            final String query=searchText.toLowerCase();
+            final String query = searchText.toLowerCase();
             FirebaseRecyclerOptions options =
                     new FirebaseRecyclerOptions.Builder<Contacts>()
                             .setQuery(m_ContactRef, Contacts.class)
@@ -193,8 +197,8 @@ public class ContactsFragment extends Fragment {
 
                                             holder.onlineIcon.setVisibility(View.INVISIBLE);
                                         }
-                                        String name=dataSnapshot.child("name").getValue().toString();
-                                        if(name.contains(query)) {
+                                        String name = dataSnapshot.child("name").getValue().toString();
+                                        if (name.contains(query)) {
                                             if (dataSnapshot.hasChild("image")) {
                                                 String userImage = dataSnapshot.child("image").getValue().toString();
                                                 String profileStatus = dataSnapshot.child("status").getValue().toString();
@@ -208,13 +212,12 @@ public class ContactsFragment extends Fragment {
                                                 holder.username.setText(profileName);
                                                 holder.userstatus.setText(profileStatus);
                                             }
-                                        }
-                                        else {
+                                        } else {
                                             holder.itemView.setVisibility(View.GONE);
-                                            View view=holder.itemView;
-                                            ViewGroup.LayoutParams layoutParams=view.getLayoutParams();
-                                            layoutParams.width=0;
-                                            layoutParams.height=0;
+                                            View view = holder.itemView;
+                                            ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+                                            layoutParams.width = 0;
+                                            layoutParams.height = 0;
                                             view.setLayoutParams(layoutParams);
                                         }
                                     }
@@ -239,6 +242,27 @@ public class ContactsFragment extends Fragment {
             m_myContactList.setAdapter(adapter);
             adapter.startListening();
         }
+    }
+
+    private void checkforReceivingCall() {
+        m_UsersRef.child(m_currentUserID)
+                .child("Ringing").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.hasChild("ringing"))
+                {
+                    calledBy=snapshot.child("ringing").getValue().toString();
+                    Intent intent=new Intent(getContext(), CallingActivity.class);
+                    intent.putExtra("receiverID",calledBy);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
 }

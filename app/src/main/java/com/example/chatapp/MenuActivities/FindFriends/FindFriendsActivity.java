@@ -19,6 +19,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 
 import com.example.chatapp.AllFragments.ModelClass.Contacts;
+import com.example.chatapp.MainActivity;
 import com.example.chatapp.R;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -215,5 +216,12 @@ public class FindFriendsActivity extends AppCompatActivity {
             };
             m_findFreindsRecyclerView.setAdapter(adapter);
             adapter.startListening();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        startActivity(new Intent(FindFriendsActivity.this, MainActivity.class));
+        finish();
     }
 }

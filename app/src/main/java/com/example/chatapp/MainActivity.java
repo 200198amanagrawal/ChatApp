@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.chatapp.AllFragments.GroupChats.GroupSelectionActivity;
 import com.example.chatapp.MenuActivities.FindFriends.FindFriendsActivity;
 import com.example.chatapp.MenuActivities.ShowSettings;
 import com.example.chatapp.MenuActivities.UpdateProfileActivity;
@@ -25,10 +26,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -151,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.create_groups:
                 updateUserOnlineStatus("online");
-                Intent intent=new Intent(MainActivity.this,GroupSelectionActivity.class);
+                Intent intent=new Intent(MainActivity.this, GroupSelectionActivity.class);
                 startActivity(intent);
                 break;
                 default:

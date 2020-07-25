@@ -2,143 +2,126 @@ package com.example.chatapp.AllFragments.GroupChats;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.chatapp.AllFragments.ModelClass.Messages;
 import com.example.chatapp.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.StorageTask;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class GroupChatActivity extends AppCompatActivity {
 
-    private Toolbar m_toolbar;
+    private String m_msgSenderID;
+    private ArrayList<String> m_msgReceiverIDs;
+    private String m_GroupName;
+    private TextView m_UserGroupName,m_Lastseen;
+    private CircleImageView m_UserImage;
+    private Toolbar m_chatToolbar;
     private ImageButton m_sendMsgButton;
-    private EditText m_usermessage;
-    private ScrollView m_scrollView;
-    private TextView m_displayTextMessage;
-    private String m_currentGroupName,m_currentUserId,m_CurrentUserName,m_currentDate,m_currentTime;
-    private FirebaseAuth m_auth;
-    private DatabaseReference m_UserRef,m_GroupRef,m_GroupMsgKeyRef;
+    private EditText m_msgInputText;
+    private FirebaseAuth mAuth;
+    private DatabaseReference m_RootRef,m_gorupRef;
+
+    private final List<Messages> messagesList=new ArrayList<>();
+    private LinearLayoutManager linearLayoutManager;
+    private GroupMessagesAdapter messagesAdapter;
+    private RecyclerView m_UsersList;
+    private String saveCurrentTime, saveCurrentDate;
+
+    private ImageButton  m_SendFilesButton;
+    private String checker="",myUrl="";
+    private StorageTask uploadTask;
+    private Uri fileUri;
+    private ProgressDialog loadingBar;
+    private ChildEventListener childEventListener;
+    private String m_groupID;
+    private DatabaseReference userMsgRef;
+
+    public boolean isSentFlag() {
+        return sentFlag;
+    }
+
+    public void setSentFlag(boolean sentFlag) {
+        this.sentFlag = sentFlag;
+    }
+
+    boolean sentFlag=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat);
+        mAuth=FirebaseAuth.getInstance();
+        m_msgSenderID=mAuth.getCurrentUser().getUid();
+        m_RootRef= FirebaseDatabase.getInstance().getReference();
 
-        m_currentGroupName=getIntent().getExtras().get("groupName").toString();
-        Toast.makeText(this, m_currentGroupName, Toast.LENGTH_SHORT).show();
+        Map<String,Object> userIDData= (HashMap<String,Object>) getIntent().getExtras().get("userIDs");
+        m_msgReceiverIDs=  new ArrayList<>();
+        for(String userIDs:userIDData.keySet())
+        {
+            m_msgReceiverIDs.add(userIDs);
+        }
+        m_msgReceiverIDs.remove(m_msgSenderID);
+        m_GroupName=getIntent().getExtras().get("groupName").toString();
+        m_groupID=getIntent().getExtras().get("groupID").toString();
 
-        m_auth=FirebaseAuth.getInstance();
-        m_currentUserId=m_auth.getCurrentUser().getUid();
-        m_UserRef= FirebaseDatabase.getInstance().getReference().child("Users");
-        m_GroupRef=FirebaseDatabase.getInstance().getReference().child("Groups").child(m_currentGroupName);
+        m_gorupRef=FirebaseDatabase.getInstance().getReference().child("GroupMessages").child(m_groupID);
 
-        initializeFields();
-        getUserInfo();
+        initializeControllers();
+
+        m_UserGroupName.setText(m_GroupName);
+        m_Lastseen.setText("");
         m_sendMsgButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveMsfToDB();
-                m_usermessage.setText("");
-                m_scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                sendMsg();
             }
         });
 
-    }
-
-    private void saveMsfToDB() {
-        String message=m_usermessage.getText().toString();
-        String messgaeKey=m_GroupRef.push().getKey();
-        if(TextUtils.isEmpty(message))
-        {
-            Toast.makeText(this, "Write some msg to send...", Toast.LENGTH_SHORT).show();
-        }
-        else
-        {
-            Calendar calendar=Calendar.getInstance();
-            SimpleDateFormat simpleDateFormat=new SimpleDateFormat("MMM dd,yyyy");
-            m_currentDate=simpleDateFormat.format(calendar.getTime());
-
-            Calendar calendartime=Calendar.getInstance();
-            SimpleDateFormat simpleTimeFormat=new SimpleDateFormat("hh:mm a");
-            m_currentTime=simpleTimeFormat.format(calendartime.getTime());
-
-            HashMap<String,Object> groupmsgKey=new HashMap<>();
-            m_GroupRef.updateChildren(groupmsgKey);
-            m_GroupMsgKeyRef=m_GroupRef.child(messgaeKey);//this will take the key and append the rest of the data
-            HashMap<String,Object> msgInfoMap=new HashMap<>();
-            msgInfoMap.put("name",m_CurrentUserName);
-            msgInfoMap.put("message",message);
-            msgInfoMap.put("date",m_currentDate);
-            msgInfoMap.put("time",m_currentTime);
-            m_GroupMsgKeyRef.updateChildren(msgInfoMap);
-        }
-    }
-
-    private void getUserInfo() {
-        m_UserRef.child(m_currentUserId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists())
-                {
-                    m_CurrentUserName=dataSnapshot.child("name").getValue().toString();
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void initializeFields() {
-        m_toolbar=findViewById(R.id.chat_toolbar);
-        setSupportActionBar(m_toolbar);
-        getSupportActionBar().setTitle(m_currentGroupName);
-        m_sendMsgButton =findViewById(R.id.send_message);
-        m_usermessage=findViewById(R.id.input_group_message);
-        m_displayTextMessage=findViewById(R.id.group_chat_text_display);
-        m_scrollView=findViewById(R.id.group_chat_scrollview);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        m_GroupRef.addChildEventListener(new ChildEventListener() {
+        childEventListener=new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.exists())
-                {
-                    DisplayMessages(dataSnapshot);
-                }
+                Messages messages=dataSnapshot.getValue(Messages.class);
+                messagesList.add(messages);
+                messagesAdapter.notifyDataSetChanged();
+                m_UsersList.smoothScrollToPosition(m_UsersList.getAdapter().getItemCount());
             }
 
             @Override
             public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
-                if(dataSnapshot.exists())
-                {
-                    DisplayMessages(dataSnapshot);
-                }
+
             }
 
             @Override
@@ -155,19 +138,138 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
+        };
     }
 
-    private void DisplayMessages(DataSnapshot dataSnapshot) {
-        Iterator iterator=dataSnapshot.getChildren().iterator();
-        while (iterator.hasNext())
+
+    private void initializeControllers() {
+        m_chatToolbar=findViewById(R.id.group_chat_toolbar);
+        setSupportActionBar(m_chatToolbar);
+
+        ActionBar actionBar=getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowCustomEnabled(true);
+
+        LayoutInflater layoutInflater=(LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View actionBarView=layoutInflater.inflate(R.layout.custom_chat_bar,null);
+        actionBar.setCustomView(actionBarView);
+
+        m_UserImage=findViewById(R.id.custom_profile_image);
+        m_Lastseen=findViewById(R.id.custom_last_seen);
+        m_UserGroupName =findViewById(R.id.custom_profile_name);
+
+        m_sendMsgButton=findViewById(R.id.group_SENDMSG_button);
+        m_msgInputText =findViewById(R.id.group_input_message);
+
+        messagesAdapter=new GroupMessagesAdapter(messagesList);
+        m_UsersList=findViewById(R.id.group_private_message_list);
+        linearLayoutManager=new LinearLayoutManager(this);
+
+        m_UsersList.setLayoutManager(linearLayoutManager);
+        m_UsersList.setAdapter(messagesAdapter);
+
+        m_SendFilesButton = findViewById(R.id.group_send_FORI_btn);
+        Calendar calendar = Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("hh:mm a");
+        saveCurrentTime = currentTime.format(calendar.getTime());
+        loadingBar=new ProgressDialog(this);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        messagesList.clear();
+        m_gorupRef.child(m_msgSenderID).
+                removeEventListener(childEventListener);}
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        messagesList.clear();
+            m_gorupRef.child(m_msgSenderID).
+                removeEventListener(childEventListener);}
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+//        if(isSentFlag())
+//        {
+//            for(String m_msgReceiverID:m_msgReceiverIDs){
+//                m_RootRef.child("GroupMessages").child(m_groupID).child(m_msgSenderID).child(m_msgReceiverID)
+//                        .addChildEventListener(childEventListener);break;}
+//            setSentFlag(false);
+//        }
+        m_gorupRef.child(m_msgSenderID).addChildEventListener(childEventListener);
+
+    }
+    private void sendMsg() {
+
+        final String messageText=m_msgInputText.getText().toString();
+        if(TextUtils.isEmpty(messageText))
         {
-            String chatDate=(String) ((DataSnapshot) iterator.next()).getValue();
-            String chatMessage=(String) ((DataSnapshot) iterator.next()).getValue();
-            String chatName=(String) ((DataSnapshot) iterator.next()).getValue();
-            String chatTime=(String) ((DataSnapshot) iterator.next()).getValue();
-            m_displayTextMessage.append(chatName+"\n"+chatMessage+"\n"+chatTime+"   "+chatDate+"\n\n\n");
-            m_scrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            Toast.makeText(this, "Write some msg to send ..", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            m_gorupRef.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    String userID= snapshot.getKey();
+                    userMsgRef = m_RootRef.child("GroupMessages").child(m_groupID).
+                            child(m_msgSenderID).push();
+                    String msgPushID=userMsgRef.getKey();
+                    Map msgTextBody=new HashMap();
+                    msgTextBody.put("message",messageText);
+                    msgTextBody.put("type","text");
+                    msgTextBody.put("from",m_msgSenderID);
+                    if(userID.equals(m_msgSenderID))
+                    {
+                        msgTextBody.put("sentOrReceived", "sent");
+                    }
+                    else {
+                        msgTextBody.put("sentOrReceived", "received");
+                    }
+                    msgTextBody.put("to",userID);
+                    msgTextBody.put("messageID", msgPushID);
+                    msgTextBody.put("time", saveCurrentTime);
+                    msgTextBody.put("date", saveCurrentDate);
+                    msgTextBody.put("groupID",m_groupID);
+                    m_gorupRef.child(userID).child(msgPushID).updateChildren(msgTextBody).addOnCompleteListener(new OnCompleteListener() {
+                        @Override
+                        public void onComplete(@NonNull Task task) {
+                            if (!task.isSuccessful())
+                            {
+                                Toast.makeText(GroupChatActivity.this, task.getException().toString(), Toast.LENGTH_SHORT).show();
+                            }
+                            m_msgInputText.setText("");
+                        }
+                    });
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
     }
 }
