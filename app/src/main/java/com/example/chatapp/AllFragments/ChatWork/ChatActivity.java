@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -424,6 +425,17 @@ public class ChatActivity extends AppCompatActivity {
         else{
             String msgSenderRef="Messages/"+m_msgSenderID+"/"+m_msgReceiverID;
             String msgReceiverRef="Messages/"+m_msgReceiverID+"/"+m_msgSenderID;
+
+            final DatabaseReference chatNotiRef=m_RootRef.child("ChatNotification").child(m_msgSenderID).child(m_msgReceiverID);
+            chatNotiRef.setValue(messageText).addOnCompleteListener(new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    if(!task.isSuccessful())
+                    {
+                        Toast.makeText(ChatActivity.this, "Noti not sent", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
             DatabaseReference userMsgRef=m_RootRef.child("Messages").child(m_msgSenderID).child(m_msgReceiverID)
                     .push();
             String msgPushID=userMsgRef.getKey();//this will generate a randrom new key everytime.
