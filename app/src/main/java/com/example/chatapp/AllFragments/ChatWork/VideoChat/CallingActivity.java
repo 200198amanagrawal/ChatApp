@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.chatapp.AllFragments.ChatWork.ChatActivity;
 import com.example.chatapp.MainActivity;
 import com.example.chatapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,8 +34,6 @@ public class CallingActivity extends AppCompatActivity {
     private String receiverImage;
     private String receiverName;
     private String senderID, callingID = "", ringingID = "";
-    private String senderImage;
-    private String senderName, checker = "";
     private DatabaseReference m_usersRef;
     private CircleImageView m_endCall, m_acceptCall;
     private MediaPlayer mediaPlayer;
@@ -55,10 +52,10 @@ public class CallingActivity extends AppCompatActivity {
         m_acceptCall = findViewById(R.id.receiver_receive_call);
         getAndSetUserInfo();
         mediaPlayer=MediaPlayer.create(this,R.raw.ringing);
+
         m_endCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checker = "clicked";
                 mediaPlayer.stop();
                 cancelCallingUser();
             }
@@ -78,6 +75,8 @@ public class CallingActivity extends AppCompatActivity {
                                 if(task.isComplete())
                                 {
                                     Intent intent1=new Intent(CallingActivity.this, VideoChatActivity.class);
+                                    intent1.putExtra("senderID",senderID);
+                                    intent1.putExtra("receiverID",receiverID);
                                     startActivity(intent1);
                                 }
                             }
@@ -98,9 +97,6 @@ public class CallingActivity extends AppCompatActivity {
                     }
                     receiverName = snapshot.child(receiverID).child("name").getValue().toString();
                     m_receiverUserName.setText(receiverName);
-                } else if (snapshot.child(senderID).exists()) {
-                    senderImage = snapshot.child(senderID).child("image").getValue().toString();
-                    senderName = snapshot.child(senderID).child("name").getValue().toString();
                 }
             }
 
@@ -115,35 +111,6 @@ public class CallingActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         mediaPlayer.start();
-
-        m_usersRef.child(receiverID).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (!checker.equals("clicked") && !(snapshot.hasChild("Calling")) && !(snapshot.hasChild("Ringing"))) {
-                    final HashMap<String, Object> callingInfo = new HashMap<>();
-                    callingInfo.put("calling", receiverID);
-                    m_usersRef.child(senderID).child("Calling").updateChildren(callingInfo)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        HashMap<String, Object> ringingInfo = new HashMap<>();
-                                        ringingInfo.put("ringing", senderID);
-                                        m_usersRef.child(receiverID)
-                                                .child("Ringing")
-                                                .updateChildren(ringingInfo);
-                                    }
-                                }
-                            });
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
         m_usersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -156,7 +123,21 @@ public class CallingActivity extends AppCompatActivity {
                 {
                     mediaPlayer.stop();
                     Intent intent1=new Intent(CallingActivity.this, VideoChatActivity.class);
+                    intent1.putExtra("senderID",senderID);
+                    intent1.putExtra("receiverID",receiverID);
                     startActivity(intent1);
+                }
+                if(snapshot.child(receiverID).child("Dropped").hasChild("dropped"))
+                {
+                    m_usersRef.child(receiverID).child("Dropped").removeValue();
+                    mediaPlayer.stop();
+                    startActivity(new Intent(CallingActivity.this,MainActivity.class));
+                }
+                if(snapshot.child(senderID).child("Dropped").hasChild("dropped"))
+                {
+                    m_usersRef.child(senderID).child("Dropped").removeValue();
+                    mediaPlayer.stop();
+                    startActivity(new Intent(CallingActivity.this,MainActivity.class));
                 }
             }
 
@@ -189,6 +170,10 @@ public class CallingActivity extends AppCompatActivity {
                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
+                                                                final HashMap<String,Object> callingPickupMap=new HashMap<>();
+                                                                callingPickupMap.put("dropped","dropped");
+                                                                m_usersRef.child(receiverID).child("Dropped")
+                                                                        .updateChildren(callingPickupMap);
                                                                 startActivity(new Intent(CallingActivity.this,
                                                                         MainActivity.class));
                                                                 finish();
@@ -232,6 +217,10 @@ public class CallingActivity extends AppCompatActivity {
                                                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
+                                                                final HashMap<String,Object> callingPickupMap=new HashMap<>();
+                                                                callingPickupMap.put("dropped","dropped");
+                                                                m_usersRef.child(senderID).child("Dropped")
+                                                                        .updateChildren(callingPickupMap);
                                                                 startActivity(new Intent(CallingActivity.this,
                                                                         MainActivity.class));
                                                                 finish();

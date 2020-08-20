@@ -1,8 +1,5 @@
 package com.example.chatapp.AllFragments.ChatWork.VideoChat;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.content.Intent;
 import android.opengl.GLSurfaceView;
@@ -11,9 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.example.chatapp.AllFragments.ChatWork.ChatActivity;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.chatapp.MainActivity;
-import com.example.chatapp.MenuActivities.FindFriends.FindFriendsActivity;
 import com.example.chatapp.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -40,7 +38,7 @@ public class VideoChatActivity extends AppCompatActivity implements Session.Sess
     private static final int RC_VIDEO_APP_PERM=124;
     private CircleImageView m_closeVideoChatBtn;
     private DatabaseReference m_usersRef;
-    private String m_userID="";
+    private String m_userID="",m_SenderUserID="",m_ReceiverUserID="";
     private FrameLayout m_PublisherViewController;
     private FrameLayout m_SubscriberViewController;
     private Session m_Session;
@@ -53,6 +51,9 @@ public class VideoChatActivity extends AppCompatActivity implements Session.Sess
         setContentView(R.layout.activity_video_chat);
         m_usersRef= FirebaseDatabase.getInstance().getReference().child("Users");
         m_userID=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        m_SenderUserID=getIntent().getExtras().get("senderID").toString();
+        m_ReceiverUserID=getIntent().getExtras().get("receiverID").toString();
+
         m_closeVideoChatBtn=findViewById(R.id.close_video_chat_btn);
         m_closeVideoChatBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,8 +71,16 @@ public class VideoChatActivity extends AppCompatActivity implements Session.Sess
                             {
                                 m_Subsriber.destroy();
                             }
-                            startActivity(new Intent(VideoChatActivity.this, FindFriendsActivity.class));
-                            finish();
+                            startActivity(new Intent(VideoChatActivity.this, MainActivity.class));
+                            if(m_userID.equals(m_SenderUserID))
+                            {
+                                m_usersRef.child(m_ReceiverUserID).child("Calling").removeValue();
+                                startActivity(new Intent(VideoChatActivity.this, MainActivity.class));
+                            }
+                            else {
+                                m_usersRef.child(m_SenderUserID).child("Calling").removeValue();
+                                startActivity(new Intent(VideoChatActivity.this, MainActivity.class));
+                            }
                         }
                         if(snapshot.child(m_userID).hasChild("Calling")) {
                             m_usersRef.child(m_userID).child("Calling").removeValue();
@@ -83,12 +92,16 @@ public class VideoChatActivity extends AppCompatActivity implements Session.Sess
                             {
                                 m_Subsriber.destroy();
                             }
-                            startActivity(new Intent(VideoChatActivity.this, FindFriendsActivity.class));
-                            finish();
-                        }
-                        else {
-                            startActivity(new Intent(VideoChatActivity.this, FindFriendsActivity.class));
-                            finish();
+                            startActivity(new Intent(VideoChatActivity.this, MainActivity.class));
+                            if(m_userID.equals(m_SenderUserID))
+                            {
+                                m_usersRef.child(m_ReceiverUserID).child("Ringing").removeValue();
+                                startActivity(new Intent(VideoChatActivity.this, MainActivity.class));
+                            }
+                            else {
+                                m_usersRef.child(m_SenderUserID).child("Ringing").removeValue();
+                                startActivity(new Intent(VideoChatActivity.this, MainActivity.class));
+                            }
                         }
                     }
 

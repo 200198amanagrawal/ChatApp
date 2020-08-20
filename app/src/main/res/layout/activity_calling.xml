@@ -54,7 +54,7 @@
         app:civ_border_width="0dp"
         android:layout_height="60dp"
         android:layout_alignBottom="@id/receiver_calling_image"
-        android:layout_marginLeft="100dp"
+        android:layout_marginLeft="80dp"
         android:layout_marginBottom="80dp"
         android:scaleType="centerCrop"
         app:civ_circle_background_color="#3F6335"

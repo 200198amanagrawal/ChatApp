@@ -79,6 +79,7 @@ public class ChatActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
     private ChildEventListener childEventListener;
     private ImageView m_VideoCam;
+    private DatabaseReference m_usersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,13 +93,39 @@ public class ChatActivity extends AppCompatActivity {
         m_msgReceiverID=getIntent().getExtras().get("visit_user_id").toString();
         m_msgReceiverName=getIntent().getExtras().get("visit_user_name").toString();
         m_msgReceiverImage=getIntent().getExtras().get("visit_user_image").toString();
-
+        m_usersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         initializeControllers();
 
         m_VideoCam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                m_usersRef.child(m_msgReceiverID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        final HashMap<String, Object> callingInfo = new HashMap<>();
+                        callingInfo.put("calling", m_msgReceiverID);
+                        m_usersRef.child(m_msgSenderID).child("Calling").updateChildren(callingInfo)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            HashMap<String, Object> ringingInfo = new HashMap<>();
+                                            ringingInfo.put("ringing", m_msgSenderID);
+                                            m_usersRef.child(m_msgReceiverID)
+                                                    .child("Ringing")
+                                                    .updateChildren(ringingInfo);
+                                        }
+                                    }
+                                });
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
                 Intent intent=new Intent(ChatActivity.this, CallingActivity.class);
                 intent.putExtra("receiverID",m_msgReceiverID);
                 intent.putExtra("receiverName",m_msgReceiverName);
