@@ -292,7 +292,7 @@ public class ProfileActivity extends AppCompatActivity {
                                                 {
                                                     m_sendMsgButton.setEnabled(true);
                                                     m_currentState="request_sent";
-                                                    m_sendMsgButton.setText("Cancel Chat request");
+                                                    m_sendMsgButton.setText("Cancel Chat Request");
                                                 }
                                             }
                                         });

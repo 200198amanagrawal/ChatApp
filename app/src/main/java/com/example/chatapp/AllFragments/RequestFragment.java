@@ -415,9 +415,7 @@ public class RequestFragment extends Fragment {
                                             }
                                         });
                                     } else if (type.equals("sent")) {
-                                        Button request_sent_btn = holder.itemView.findViewById(R.id.accept_button_request);
-                                        request_sent_btn.setText("Req Sent");
-                                        holder.itemView.findViewById(R.id.reject_button_request).setVisibility(View.INVISIBLE);
+                                        holder.itemView.findViewById(R.id.accept_button_request).setVisibility(View.GONE);
                                         m_UsersRef.child(list_user_id).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
