@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/opaquebg"
     tools:context=".SignupAndLogin.RegisterActivity">
     <ScrollView
         android:layout_width="match_parent"
@@ -20,61 +21,78 @@
             <ImageView
                 android:id="@+id/register_photo"
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="50dp"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:scaleType="centerCrop"
-                app:srcCompat="@drawable/register_image" />
+                android:src="@drawable/login"/>
 
             <EditText
                 android:id="@+id/register_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="300dp"
+                android:layout_height="37dp"
                 android:layout_below="@+id/register_photo"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="70dp"
+                android:layout_marginEnd="41dp"
+                android:layout_marginRight="41dp"
                 android:background="@drawable/inputs"
-                android:drawableLeft="@drawable/email"
                 android:gravity="center_vertical"
-                android:hint="Email..."
+                android:hint="Email"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#E7E7DB"
                 android:inputType="textEmailAddress"
                 android:padding="4dp"
-                android:layout_marginTop="25dp"
-                android:layout_marginLeft="17dp"
-                android:layout_marginRight="17dp"
-                />
+                android:textAlignment="center" />
+
             <EditText
                 android:id="@+id/register_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="300dp"
+                android:layout_height="37dp"
                 android:layout_below="@+id/register_email"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="41dp"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#E7E7DB"
+                android:layout_marginRight="41dp"
                 android:background="@drawable/inputs"
-                android:drawableLeft="@drawable/password"
                 android:gravity="center_vertical"
-                android:hint="Password..."
+                android:hint="Password"
                 android:inputType="textPassword"
                 android:padding="4dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="17dp"
-                android:layout_marginRight="17dp"
-                />
+                android:textAlignment="center" />
 
             <Button
                 android:id="@+id/register_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="300dp"
+                android:layout_height="37dp"
                 android:layout_below="@id/register_password"
-                android:layout_marginLeft="19dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginStart="50dp"
+                android:layout_marginLeft="50dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginRight="19dp"
+                android:layout_marginEnd="41dp"
+                android:layout_marginRight="41dp"
                 android:background="@drawable/gradient_button_color"
-                android:text="Create New Account"
+                android:text="Sign Up"
                 android:textAllCaps="false"
                 android:textColor="@color/cardview_light_background"
-                android:textSize="24sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/existing_account"
@@ -83,12 +101,12 @@
                 android:layout_below="@+id/register_button"
                 android:layout_marginLeft="17dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="25dp"
                 android:layout_marginRight="17dp"
                 android:gravity="right"
-                android:textSize="18sp"
+                android:textSize="20sp"
                 android:text="Already an existing User?"
-                android:textColor="@color/colorPrimaryDark" />
+                android:textColor="#FFFFFF" />
         </RelativeLayout>
     </ScrollView>
 

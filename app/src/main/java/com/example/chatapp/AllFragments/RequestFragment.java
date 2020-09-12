@@ -96,8 +96,8 @@ public class RequestFragment extends Fragment {
                 new FirebaseRecyclerAdapter<Contacts, RequestsViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull final RequestsViewHolder holder, final int position, @NonNull Contacts model) {
-                        holder.itemView.findViewById(R.id.request_accept_button).setVisibility(View.VISIBLE);
-                        holder.itemView.findViewById(R.id.request_reject_button).setVisibility(View.VISIBLE);
+                        holder.itemView.findViewById(R.id.accept_button_request).setVisibility(View.VISIBLE);
+                        holder.itemView.findViewById(R.id.reject_button_request).setVisibility(View.VISIBLE);
                         final String list_user_id = getRef(position).getKey();
                         final DatabaseReference getTypeRef = getRef(position).child("request_type").getRef();
                         getTypeRef.addValueEventListener(new ValueEventListener() {
@@ -197,9 +197,9 @@ public class RequestFragment extends Fragment {
                                             }
                                         });
                                     } else if (type.equals("sent")) {
-                                        Button request_sent_btn = holder.itemView.findViewById(R.id.request_accept_button);
-                                        request_sent_btn.setText("Req Sent");
-                                        holder.itemView.findViewById(R.id.request_reject_button).setVisibility(View.INVISIBLE);
+
+                                        holder.itemView.findViewById(R.id.accept_button_request).setVisibility(View.GONE);
+                                        holder.itemView.findViewById(R.id.reject_button_request).setVisibility(View.VISIBLE);
                                         m_UsersRef.child(list_user_id).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -270,7 +270,7 @@ public class RequestFragment extends Fragment {
                     @Override
 //this function is used to inflate the layout which contains the user name and status and will show to recyclerview
                     public RequestsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_display_layout, parent, false);
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_display_layout_request, parent, false);
                         RequestsViewHolder holder = new RequestsViewHolder(view);
                         return holder;
                     }
@@ -286,11 +286,11 @@ public class RequestFragment extends Fragment {
 
         public RequestsViewHolder(@NonNull View itemView) {
             super(itemView);
-            username = itemView.findViewById(R.id.user_profile_name);
-            userstatus = itemView.findViewById(R.id.user_status);
-            profileImage = itemView.findViewById(R.id.users_profile_image);
-            AcceptButton = itemView.findViewById(R.id.request_accept_button);
-            RejectButton = itemView.findViewById(R.id.request_reject_button);
+            username = itemView.findViewById(R.id.user_profile_name_request);
+            userstatus = itemView.findViewById(R.id.user_status_request);
+            profileImage = itemView.findViewById(R.id.users_profile_image_request);
+            AcceptButton = itemView.findViewById(R.id.accept_button_request);
+            RejectButton = itemView.findViewById(R.id.reject_button_request);
         }
     }
 
@@ -304,8 +304,8 @@ public class RequestFragment extends Fragment {
                 new FirebaseRecyclerAdapter<Contacts, RequestsViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull final RequestsViewHolder holder, final int position, @NonNull Contacts model) {
-                        holder.itemView.findViewById(R.id.request_accept_button).setVisibility(View.VISIBLE);
-                        holder.itemView.findViewById(R.id.request_reject_button).setVisibility(View.VISIBLE);
+                        holder.itemView.findViewById(R.id.accept_button_request).setVisibility(View.VISIBLE);
+                        holder.itemView.findViewById(R.id.reject_button_request).setVisibility(View.VISIBLE);
                         final String list_user_id = getRef(position).getKey();
                         final DatabaseReference getTypeRef = getRef(position).child("request_type").getRef();
                         getTypeRef.addValueEventListener(new ValueEventListener() {
@@ -415,9 +415,9 @@ public class RequestFragment extends Fragment {
                                             }
                                         });
                                     } else if (type.equals("sent")) {
-                                        Button request_sent_btn = holder.itemView.findViewById(R.id.request_accept_button);
+                                        Button request_sent_btn = holder.itemView.findViewById(R.id.accept_button_request);
                                         request_sent_btn.setText("Req Sent");
-                                        holder.itemView.findViewById(R.id.request_reject_button).setVisibility(View.INVISIBLE);
+                                        holder.itemView.findViewById(R.id.reject_button_request).setVisibility(View.INVISIBLE);
                                         m_UsersRef.child(list_user_id).addValueEventListener(new ValueEventListener() {
                                             @Override
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -498,7 +498,7 @@ public class RequestFragment extends Fragment {
                     @Override
 //this function is used to inflate the layout which contains the user name and status and will show to recyclerview
                     public RequestsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_display_layout, parent, false);
+                        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.users_display_layout_request, parent, false);
                         RequestsViewHolder holder = new RequestsViewHolder(view);
                         return holder;
                     }

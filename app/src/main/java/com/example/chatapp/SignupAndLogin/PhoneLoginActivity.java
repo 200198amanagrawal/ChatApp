@@ -165,4 +165,11 @@ public class PhoneLoginActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(PhoneLoginActivity.this,LoginActivity.class);
+        startActivity(intent);
+    }
 }
